@@ -1,5 +1,7 @@
 #include <iostream>
 #include "bmp/read_bmp.h"
+#include "img/img_misc.h"
+
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -11,6 +13,8 @@ int main(int argc, char **argv) {
 
   std::cout << "Img width : " << img.width << std::endl;
   std::cout << "Img height : " << img.height << std::endl;
+
+  printImg(img, img.width, img.height);
 
   return 0;
 }
