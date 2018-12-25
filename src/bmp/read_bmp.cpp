@@ -24,6 +24,9 @@ imgRGB readBMP(std::string fileName) {
     // Même chose pour la hauteur
     int height = abs(*(int *) & header[22]);
 
+    int offsetPixels = abs(*(int *) &header[10]);
+    file.seekg(offsetPixels, std::ios::beg);
+
     int width_padded = width * 3;
     width_padded += (4 - width_padded % 4) % 4;
 
