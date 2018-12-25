@@ -9,6 +9,11 @@
 #include <iostream>
 #include <string>
 
+#define RESET   std::string("\033[0m")
+#define RED     std::string("\033[31m")      /* Red */
+#define GREEN   std::string("\033[32m")      /* Green */
+#define BLUE    std::string("\033[34m")      /* Blue */
+
 void printImg(imgRGB img, int widthLimit, int heightLimit);
 
 #endif //COMPRESSIONJPEG_IMG_MISC_H

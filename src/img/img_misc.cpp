@@ -14,14 +14,18 @@ void printImg(imgRGB img, int widthLimit, int heightLimit) {
 
 
     for (int i = 0; i < heightLimit; i++) {
-        std::string line = "";
+        std::string line;
         for (int j = 0; j < widthLimit; j++) {
             color pixel = img.pixels[i][j];
             int r = std::get<0>(pixel);
             int g = std::get<1>(pixel);
             int b = std::get<2>(pixel);
-            int mean = g;//(r + g + b) / 3;
-            line += mean > 122 ? "# " : ". ";
+            if (r > g && r > b)
+                line += RED + "# " + RESET;
+            else if (g > b && g > r)
+                line += GREEN + "# " + RESET;
+            else
+                line += BLUE + "# " + RESET;
         }
         std::cout << line << std::endl;
     }
