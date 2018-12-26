@@ -7,6 +7,14 @@
 
 #include <vector>
 
+/**
+ *
+ * @param blockDCT The N * N DCT block result
+ * @param x the freq height to compute inverse DCT
+ * @param y the freq width to compute inverse DCT
+ * @param N the block size
+ * @return the pixels value
+ */
 double idct(std::vector<std::vector<double>> blockDCT, int x, int y, int N);
 
 #endif //COMPRESSIONJPEG_IDCT_H
