@@ -11,7 +11,7 @@
 
 /**
  *
- * @param pixelBlock the block of N * N pixels (normalized in range [0;1]
+ * @param pixelBlock the block of N * N pixels
  * @param i the pixel height to compute dct
  * @param j the pixel width to compute dct
  * @param N the size of the pixel block
