@@ -7,6 +7,7 @@
 
 #include <vector>
 
-std::vector<std::vector<double>> de_quantize(std::vector<std::vector<double>> F_prime, std::vector<std::vector<double>> Q);
+std::vector<std::vector<double>>
+de_quantize(std::vector<std::vector<double>> F_prime, std::vector<std::vector<double>> Q);
 
 #endif //COMPRESSIONJPEG_DE_QUANTIZATION_H

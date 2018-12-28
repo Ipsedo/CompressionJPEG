@@ -11,9 +11,9 @@
 typedef std::tuple<int, int, int> color;
 
 struct imgRGB {
-    int width;
-    int height;
-    std::vector<std::vector<color>> pixels;
+	int width;
+	int height;
+	std::vector<std::vector<color>> pixels;
 };
 
 #endif //COMPRESSIONJPEG_REPR_H
