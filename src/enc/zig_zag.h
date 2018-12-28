@@ -12,6 +12,6 @@
  * @param to_encode the square matrix to encode
  * @return the zig-zag encoded vector
  */
-std::vector<double> zig_zag_encodage(std::vector<std::vector<double>> to_encode);
+std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode);
 
 #endif //COMPRESSIONJPEG_ZIG_ZAG_H
