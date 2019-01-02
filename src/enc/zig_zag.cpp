@@ -30,12 +30,11 @@ std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode) {
 	int curr_diag = 0;
 
 	while (added < lgt) {
-		for (; x >= 0 && x < N && y >= 0 && y < N; ) {
+		for (; x >= 0 && x < N && y >= 0 && y < N; added++) {
 			res.push_back(to_encode[y][x]);
 
 			if (step) { x++; y--; } // diagonale haut droit
 			else { x--; y++; }      // diagonale bas gauche
-			added++;
 		}
 
 		curr_diag++;
