@@ -17,7 +17,15 @@ void test_bmp(std::string file_name) {
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
 
-	printImg(img, img.width, img.height);
+	//printImg(img, img.width, img.height);
+
+	imgGreyScale imgGS = toGreyScale(img);
+
+	auto blocks = splitImg(imgGS);
+
+	std::cout << blocks.size() << std::endl;
+
+	std::cout << imgGS.width << ", " << img.height << std::endl;
 }
 
 void test_all() {
@@ -115,17 +123,16 @@ void test_zig_zag() {
 
 int main(int argc, char **argv) {
 
-	/*if (argc < 2) {
+	if (argc < 2) {
 	  std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
 	}
 
 	test_bmp(argv[1]);
-	*/
 
 	//test_all();
 
-	huff_tbl dc_tbl1 = DC1_LENGTH;
-	std::cout << dc_tbl1[EOB] << std::endl;
+	/*huff_tbl dc_tbl1 = DC1_LENGTH;
+	std::cout << dc_tbl1[EOB] << std::endl;*/
 
 	//test_zig_zag();
 
