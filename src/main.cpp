@@ -7,6 +7,7 @@
 #include "quant/quant_matrix.h"
 #include "quant/de_quantization.h"
 #include "enc/zig_zag.h"
+#include "enc/huffman_tables.h"
 #include <vector>
 #include <iomanip>
 
@@ -121,11 +122,12 @@ int main(int argc, char **argv) {
 	test_bmp(argv[1]);
 	*/
 
-	/*
-	test_all();
-	 */
+	//test_all();
 
-	test_zig_zag();
+	huff_tbl dc_tbl1 = DC1_LENGTH;
+	std::cout << dc_tbl1[EOB] << std::endl;
+
+	//test_zig_zag();
 
 	return 0;
 }
