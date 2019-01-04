@@ -16,4 +16,10 @@ struct imgRGB {
 	std::vector<std::vector<color>> pixels;
 };
 
+struct imgGreyScale {
+	int width;
+	int height;
+	std::vector<std::vector<int>> pixels;
+};
+
 #endif //COMPRESSIONJPEG_REPR_H

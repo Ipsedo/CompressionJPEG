@@ -32,3 +32,18 @@ void printImg(imgRGB img, int widthLimit, int heightLimit) {
 		std::cout << line << std::endl;
 	}
 }
+
+imgGreyScale toGreyScale(imgRGB img) {
+	imgGreyScale res;
+	res.width = img.width;
+	res.height = img.height;
+
+	for (int i = 0; i < res.height; i++) {
+		std::vector<int> tmp;
+		for (int j = 0; j < res.width; j++) {
+			tmp.push_back((std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j])) / 3);
+		}
+		res.pixels.push_back(tmp);
+	}
+	return res;
+}

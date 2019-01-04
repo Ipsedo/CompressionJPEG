@@ -16,4 +16,6 @@
 
 void printImg(imgRGB img, int widthLimit, int heightLimit);
 
+imgGreyScale toGreyScale(imgRGB img);
+
 #endif //COMPRESSIONJPEG_IMG_MISC_H
