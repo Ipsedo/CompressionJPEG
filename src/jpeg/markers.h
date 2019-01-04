@@ -11,5 +11,6 @@
 #define SOS 0xDA // Start of scan
 #define EOI 0xD9 // End of Image
 #define DQT 0xDB // Quantization Table
+#define EOB 0x00
 
 #endif //COMPRESSIONJPEG_MARKERS_H
