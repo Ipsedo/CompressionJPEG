@@ -47,3 +47,33 @@ imgGreyScale toGreyScale(imgRGB img) {
 	}
 	return res;
 }
+
+std::vector<std::vector<std::vector<int>>> splitImg(imgGreyScale img) {
+	std::vector<std::vector<std::vector<int>>> res;
+
+	for (int y = 0; y < img.height; y += 8) {
+		for (int x = 0; x < img.width; x += 8) {
+			res.push_back(makeBlock(img, x, y));
+		}
+	}
+
+	return res;
+}
+
+
+std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y) {
+	std::vector<std::vector<int>> res;
+
+	for (int i = 0; i < 8; i++) {
+		std::vector<int> tmp(8, 0);
+		for (int j = 0; j < 8; j++) {
+			if (i + y < img.height && j + x < img.width)
+				tmp[j] = img.pixels[i + y][j + x];
+			else
+				tmp[j] = PADDING;
+		}
+		res.push_back(tmp);
+	}
+
+	return res;
+}

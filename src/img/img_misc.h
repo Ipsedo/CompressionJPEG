@@ -18,4 +18,10 @@ void printImg(imgRGB img, int widthLimit, int heightLimit);
 
 imgGreyScale toGreyScale(imgRGB img);
 
+std::vector<std::vector<std::vector<int>>> splitImg(imgGreyScale img);
+
+#define PADDING 0
+
+std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y);
+
 #endif //COMPRESSIONJPEG_IMG_MISC_H
