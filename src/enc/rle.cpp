@@ -47,3 +47,28 @@ std::vector<pair_rle> rle(std::vector<int> quantized_block) {
 
 	return res;
 }
+
+
+std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle) {
+	std::vector<pair_dc_ac> res;
+
+	if (std::get<0>(rle[0]) == EOB)
+		res.push_back(pair_dc_ac(EOB, ""));
+
+	pair_rle dc = rle[0];
+	unsigned char magn_dc = std::get<0>(dc);
+	int coeff_dc = std::get<1>(dc);
+	res.push_back(pair_dc_ac(magn_dc, write_bits<11>(10, 1020)));
+
+	for (int i = 1; i < rle.size(); i++) {
+		pair_rle ac = rle[i];
+		auto zero_n_magn = std::get<0>(ac);
+		int coeff = std::get<1>(ac);
+
+		int magn = zero_n_magn & 0x0F;
+
+		res.push_back(pair_dc_ac(zero_n_magn, write_bits<10>(magn, coeff)));
+	}
+
+	return res;
+}

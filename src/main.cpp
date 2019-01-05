@@ -112,8 +112,14 @@ void test_all() {
 
 	for (int i = 0; i < rle_res.size(); i++)
 		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(rle_res[i])) << std::dec << ", " << std::get<1>(rle_res[i]) <<"] ";
-	std::cout << std::endl;
+	std::cout << std::endl << std::endl;
 
+	std::vector<pair_dc_ac> pre_coded_dc_ac = write_dc_acs(rle_res);
+
+	std::cout << "Pre coded DC and AC" << std::endl;
+	for (int i = 0; i < pre_coded_dc_ac.size(); i++)
+		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(pre_coded_dc_ac[i])) << std::dec << ", " << std::get<1>(pre_coded_dc_ac[i]) <<"] ";
+	std::cout << std::endl << std::endl;
 }
 
 void test_zig_zag() {
