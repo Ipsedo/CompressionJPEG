@@ -17,3 +17,14 @@ double idct(std::vector<std::vector<double>> blockDCT, int x, int y, int N) {
 	}
 	return 2.0 * sum / N;
 }
+
+
+std::vector<std::vector<double>> idct_block(std::vector<std::vector<double>> blockDCT) {
+	int N = blockDCT.size();
+	std::vector<std::vector<double>> res(N, std::vector<double>(N, 0));
+	for (int i = 0; i < N; i ++)
+		for (int j = 0; j < N; j++)
+			res[i][j] = idct(blockDCT, i, j, N);
+
+	return res;
+}

@@ -17,4 +17,6 @@
  */
 double idct(std::vector<std::vector<double>> blockDCT, int x, int y, int N);
 
+std::vector<std::vector<double>> idct_block(std::vector<std::vector<double>> blockDCT);
+
 #endif //COMPRESSIONJPEG_IDCT_H
