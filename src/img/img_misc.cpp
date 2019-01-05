@@ -43,7 +43,9 @@ imgGreyScale toGreyScale(imgRGB img) {
 		std::vector<int> tmp;
 		for (int j = 0; j < res.width; j++) {
 			// Moyenne des 3 composantes
-			tmp.emplace_back((std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j])) / 3);
+			tmp.emplace_back(
+					(std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j]))
+			         / 3);
 		}
 		res.pixels.emplace_back(tmp);
 	}
@@ -72,9 +74,12 @@ std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y) {
 			if (i + y < img.height && j + x < img.width)
 				// Dans l'image
 				tmp[j] = img.pixels[i + y][j + x];
-			else
-				// En dehors de l'image : PADDING
-				tmp[j] = PADDING;
+			else {
+				// En dehors de l'image : padding Symétrique
+				int symJ = img.width - (j + x) - 1;
+				int symI = img.height - (i + y) - 1;
+				tmp[j] = img.pixels[symI + y][symJ + x];
+			}
 		}
 		res.emplace_back(tmp);
 	}
