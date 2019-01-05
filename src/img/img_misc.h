@@ -20,6 +20,8 @@ imgGreyScale toGreyScale(imgRGB img);
 
 std::vector<std::vector<std::vector<int>>> splitImg(imgGreyScale img);
 
+imgGreyScale deSplitImg(std::vector<std::vector<std::vector<int>>> to_de_split, int width, int height);
+
 #define PADDING 0
 
 std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y);

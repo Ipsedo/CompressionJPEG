@@ -3,6 +3,7 @@
 //
 
 #include "img_misc.h"
+#include <math.h>
 
 void printImg(imgRGB img, int widthLimit, int heightLimit) {
 	if (widthLimit > img.width) {
@@ -73,6 +74,31 @@ std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y) {
 				tmp[j] = PADDING;
 		}
 		res.push_back(tmp);
+	}
+
+	return res;
+}
+
+
+imgGreyScale deSplitImg(std::vector<std::vector<std::vector<int>>> to_de_split, int width, int height) {
+	imgGreyScale res;
+	res.width = width;
+	res.height = height;
+
+	res.pixels = std::vector<std::vector<int>> (res.height, std::vector<int>(res.width, 0));
+
+	for (int y = 0; y < height; y += 8) {
+		for (int x = 0; x < width; x += 8) {
+			int tmpY = y / 8;
+			int tmpX = x / 8;
+			int nb_block_per_row = (int) ceil(width / 8.0);
+			int index_block = tmpY * nb_block_per_row + tmpX;
+			for (int i = 0; i < 8 && i + y < height; i++) {
+				for (int j = 0; j < 8 && j + x < width; j++) {
+					res.pixels[y + i][x + j] = to_de_split[index_block][i][j];
+				}
+			}
+		}
 	}
 
 	return res;
