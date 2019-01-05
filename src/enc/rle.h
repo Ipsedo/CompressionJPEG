@@ -15,6 +15,8 @@ typedef std::tuple<unsigned char, int> pair_rle;
 
 std::vector<pair_rle> rle(std::vector<int> quantized_block);
 
+std::vector<int> de_rle(std::vector<pair_rle> rle_values);
+
 typedef std::tuple<unsigned char, std::string> pair_dc_ac;
 
 template<int Max_Magn>

@@ -72,3 +72,24 @@ std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle) {
 
 	return res;
 }
+
+std::vector<int> de_rle(std::vector<pair_rle> rle_values) {
+	std::vector<int> res;
+
+	int added = 0;
+	for (int i = 0; i < rle_values.size() - 1; i++, added++) {
+		auto p = rle_values[i];
+		auto zero_n_magn = std::get<0>(p);
+		int coeff = std::get<1>(p);
+
+		int nb_zero = zero_n_magn >> 4;
+		for (int j = 0; j < nb_zero; j++, added++)
+			res.push_back(0);
+		res.push_back(coeff);
+	}
+	for (int i = added; i < 64; i++) {
+		res.push_back(0);
+	}
+
+	return res;
+}
