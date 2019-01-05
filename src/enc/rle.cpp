@@ -36,13 +36,10 @@ std::vector<pair_rle> rle(std::vector<int> quantized_block) {
 				std::cout << "pb all zero > 16" << std::endl;
 				exit(1);
 			}
-			
-			std::cout << "a " << std::hex << (zero_restant << 4) << std::endl;
+
 			unsigned char to_write = zero_restant << 4;
 			i += zero_restant;
-			std::cout << std::hex << static_cast<unsigned int>(to_write) << std::dec << std::endl;
 			to_write |= (unsigned char) ceil(log(abs(quantized_block[i]) + 1) / log(2.0));
-			std::cout << std::hex << static_cast<unsigned int>(to_write) << std::dec << std::endl;
 			res.push_back(pair_rle(to_write, quantized_block[i]));
 		}
 	}
