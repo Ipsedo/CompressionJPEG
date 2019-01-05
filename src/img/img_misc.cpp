@@ -43,9 +43,9 @@ imgGreyScale toGreyScale(imgRGB img) {
 		std::vector<int> tmp;
 		for (int j = 0; j < res.width; j++) {
 			// Moyenne des 3 composantes
-			tmp.emplace_back(
-					(std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j]))
-			         / 3);
+			auto c = (std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j]))
+					 / 3;
+			tmp.emplace_back(c);
 		}
 		res.pixels.emplace_back(tmp);
 	}
