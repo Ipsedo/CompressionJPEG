@@ -10,6 +10,7 @@
 #include "enc/huffman_tables.h"
 #include "enc/rle.h"
 #include "bmp/write_bmp.h"
+#include "enc/huffman.h"
 #include <vector>
 #include <iomanip>
 
@@ -121,15 +122,34 @@ void test_all() {
 		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(rle_res[i])) << std::dec << ", " << std::get<1>(rle_res[i]) <<"] ";
 	std::cout << std::endl << std::endl;
 
-	/*std::vector<pair_dc_ac> pre_coded_dc_ac = write_dc_acs(rle_res);
+	std::vector<pair_dc_ac> pre_coded_dc_ac = write_dc_acs(rle_res);
 
 	std::cout << "Pre coded DC and AC" << std::endl;
 	for (int i = 0; i < pre_coded_dc_ac.size(); i++)
 		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(pre_coded_dc_ac[i])) << std::dec << ", " << std::get<1>(pre_coded_dc_ac[i]) <<"] ";
-	std::cout << std::endl << std::endl;*/
+	std::cout << std::endl << std::endl;
+
+	std::cout << "Binary string repre" << std::endl;
+	std::string huff = encode_huffman(pre_coded_dc_ac, DC1_LENGTH, AC_CODE);
+	std::cout << huff << std::endl << std::endl;
+
+	rev_huff_tbl DC1_LENGTH_REV = reverse_huffman_table(DC1_LENGTH);
+	rev_huff_tbl AC_CODE_REV = reverse_huffman_table(AC_CODE);
+
+	std::cout << "Decoded huffman" << std::endl;
+	auto decoded_huffman = decode_huffman(huff, DC1_LENGTH_REV, AC_CODE_REV);
+	for (int i = 0; i < decoded_huffman[0].size(); i++)
+		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(decoded_huffman[0][i])) << std::dec << ", " << std::get<1>(decoded_huffman[0][i]) <<"] ";
+	std::cout << std::endl << std::endl;
+
+	std::cout << "De DC AC" << std::endl;
+	auto de_dc_acs = convert_dc_ac_to_rle(decoded_huffman[0]);
+	for (int i = 0; i < de_dc_acs.size(); i++)
+		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(de_dc_acs[i])) << std::dec << ", " << std::get<1>(de_dc_acs[i]) <<"] ";
+	std::cout << std::endl << std::endl;
 
 	std::cout << "de RLE" << std::endl;
-	auto inv_rle = de_rle(rle_res);
+	auto inv_rle = de_rle(de_dc_acs);
 
 	for (int i : inv_rle)
 		std::cout << i << ", ";
@@ -180,7 +200,7 @@ void test_zig_zag() {
 void final_test() {
 
 	// Lecture de l'image bmp non compressée
-	imgRGB img = readBMP("res/MARBLES.BMP");
+	imgRGB img = readBMP("../res/hibiscus.bmp");
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
@@ -193,6 +213,8 @@ void final_test() {
 
 	// Découpage de l'image en blocks
 	auto blocks = splitImg(imgGS);
+
+	std::cout << "1 " << blocks.size() << std::endl;
 
 	std::vector<std::vector<std::vector<double>>> dct;
 
@@ -234,15 +256,23 @@ void final_test() {
 	for (int bl = 0; bl < zig_zag.size(); bl++)
 		rle_blocks.emplace_back(rle(zig_zag[bl]));
 
+	std::cout << "2 " << rle_blocks.size() << std::endl;
+
+	std::vector<std::vector<pair_dc_ac>> dc_ac_blocks;
+	for (int bl = 0; bl < rle_blocks.size(); bl++)
+		dc_ac_blocks.push_back(write_dc_acs(rle_blocks[bl]));
+
+
+	std::cout << "3 " << dc_ac_blocks.size() << std::endl;
+
 	// On concatene tout les pair_rle pour mesurer
 	// l'espace mémoire occupé par uniquement les pixels
-	std::vector<pair_rle> concatenated;
-	for (int bl = 0; bl < rle_blocks.size(); bl++) {
-		for (int i = 0; i < rle_blocks[bl].size(); i++)
-			concatenated.emplace_back(rle_blocks[bl][i]);
-	}
+	std::string compressed_huffman;
+	for (int bl = 0; bl < rle_blocks.size(); bl++)
+		compressed_huffman += encode_huffman(dc_ac_blocks[bl], DC1_LENGTH, AC_CODE);
+	std::cout << "(compressé / original) : " << compressed_huffman.length() / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
 
-	long nb_bits = 0;
+	/*long nb_bits = 0;
 	for (int i = 0; i < concatenated.size(); i++) {
 		unsigned char rle_marker = std::get<0>(concatenated[i]);
 		// Un octet pour la balise rle :
@@ -255,16 +285,28 @@ void final_test() {
 	// En partant du principe que l'image originale contient des valeurs de gris
 	// entre 0 et 255 (un byte)
 	// On écarte volontairement les entête de fichier pour bmp et jpeg
-	std::cout<< "(compressé / original) : " << nb_bits / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
+	std::cout<< "(compressé / original) : " << nb_bits / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;*/
+
 
 	/**
 	 * Décompression
 	 */
+	rev_huff_tbl DC1_LENGTH_REV = reverse_huffman_table(DC1_LENGTH);
+	rev_huff_tbl AC_CODE_REV = reverse_huffman_table(AC_CODE);
+
+	// Decodage de Huffman
+	std::vector<std::vector<pair_dc_ac>> de_huffman = decode_huffman(compressed_huffman, DC1_LENGTH_REV, AC_CODE_REV);
+
+	// Conversion coeff : string binary repr vers int
+	std::vector<std::vector<pair_rle>> de_dc_acs;
+	std::cout << de_huffman.size() << std::endl;
+	for (int bl = 0; bl < de_huffman.size(); bl++)
+		de_dc_acs.emplace_back(convert_dc_ac_to_rle(de_huffman[bl]));
 
 	// Décodage RLE
 	std::vector<std::vector<int>> inv_rle;
-	for (int bl = 0; bl < rle_blocks.size(); bl++)
-		inv_rle.emplace_back(de_rle(rle_blocks[bl]));
+	for (int bl = 0; bl < de_dc_acs.size(); bl++)
+		inv_rle.emplace_back(de_rle(de_dc_acs[bl]));
 
 	// Décodage zig zag
 	std::vector<std::vector<std::vector<int>>> de_zig_zag;
