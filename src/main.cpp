@@ -8,6 +8,7 @@
 #include "quant/de_quantization.h"
 #include "enc/zig_zag.h"
 #include "enc/huffman_tables.h"
+#include "enc/rle.h"
 #include <vector>
 #include <iomanip>
 
@@ -93,6 +94,26 @@ void test_all() {
 		std::cout << std::endl;
 	}
 
+
+	std::vector<std::vector<int>> quantized_converted;
+	for (int i = 0; i < quantized.size(); i++)
+		quantized_converted.push_back(std::vector<int>(quantized[i].begin(), quantized[i].end()));
+
+	std::vector<int> zig_zag_res = zig_zag_encodage(quantized_converted);
+
+	std::cout << "zig zag" << std::endl;
+	for (int i = 0; i < zig_zag_res.size(); i++)
+		std::cout << zig_zag_res[i] << ", ";
+	std::cout << std::endl << std::endl;
+
+	std::vector<char> rle_res = rle(zig_zag_res);
+
+	std::cout << "RLE" << std::endl;
+
+	for (int i = 0; i < rle_res.size(); i++)
+		std::cout << std::hex << static_cast<int>(rle_res[i]) << std::dec << ", ";
+	std::cout << std::endl;
+
 }
 
 void test_zig_zag() {
@@ -123,13 +144,13 @@ void test_zig_zag() {
 
 int main(int argc, char **argv) {
 
-	if (argc < 2) {
+	/*if (argc < 2) {
 	  std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
 	}
 
-	test_bmp(argv[1]);
+	test_bmp(argv[1]);*/
 
-	//test_all();
+	test_all();
 
 	/*huff_tbl dc_tbl1 = DC1_LENGTH;
 	std::cout << dc_tbl1[EOB] << std::endl;*/
