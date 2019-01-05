@@ -7,6 +7,6 @@
 
 #include <vector>
 
-std::vector<char> rle(std::vector<int> quantized_block);
+std::vector<unsigned char> rle(std::vector<int> quantized_block);
 
 #endif //COMPRESSIONJPEG_RLE_H

@@ -7,8 +7,8 @@
 #include <math.h>
 #include <iostream>
 
-std::vector<char> rle(std::vector<int> quantized_block) {
-	std::vector<char> res;
+std::vector<unsigned char> rle(std::vector<int> quantized_block) {
+	std::vector<unsigned char> res;
 
 	for (int i = 0; i < quantized_block.size(); i++) {
 		bool all_zero = true;
@@ -44,7 +44,7 @@ std::vector<char> rle(std::vector<int> quantized_block) {
 				to_write |= (unsigned char) quantized_block[i];
 				res.push_back(to_write);
 			} else {
-				res.push_back((char) quantized_block[i]);
+				res.push_back((unsigned char) quantized_block[i]);
 			}
 		}
 	}
