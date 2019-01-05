@@ -42,6 +42,7 @@ imgGreyScale toGreyScale(imgRGB img) {
 	for (int i = 0; i < res.height; i++) {
 		std::vector<int> tmp;
 		for (int j = 0; j < res.width; j++) {
+			// Moyenne des 3 composantes
 			tmp.emplace_back((std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j])) / 3);
 		}
 		res.pixels.emplace_back(tmp);
@@ -69,8 +70,10 @@ std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y) {
 		std::vector<int> tmp(8, 0);
 		for (int j = 0; j < 8; j++) {
 			if (i + y < img.height && j + x < img.width)
+				// Dans l'image
 				tmp[j] = img.pixels[i + y][j + x];
 			else
+				// En dehors de l'image : PADDING
 				tmp[j] = PADDING;
 		}
 		res.emplace_back(tmp);
@@ -87,12 +90,15 @@ imgGreyScale deSplitImg(std::vector<std::vector<std::vector<int>>> to_de_split, 
 
 	res.pixels = std::vector<std::vector<int>> ((unsigned long) res.height, std::vector<int>(res.width, 0));
 
+	// Deux premières boucles pour le parcourt des blocks
 	for (int y = 0; y < height; y += 8) {
 		for (int x = 0; x < width; x += 8) {
 			int tmpY = y / 8;
 			int tmpX = x / 8;
 			int nb_block_per_row = (int) ceil(width / 8.0);
 			int index_block = tmpY * nb_block_per_row + tmpX;
+
+			// On récupère les valeur du block
 			for (int i = 0; i < 8 && i + y < height; i++) {
 				for (int j = 0; j < 8 && j + x < width; j++) {
 					res.pixels[y + i][x + j] = to_de_split[index_block][i][j];

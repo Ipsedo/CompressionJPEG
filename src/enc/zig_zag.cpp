@@ -74,6 +74,8 @@ std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode) {
 
 
 std::vector<std::vector<int>> zig_zag_decodage(std::vector<int> to_decode) {
+	// Même fonction que pour l'encodage
+
 	auto N = (unsigned long) sqrt(to_decode.size());
 
 	std::vector<std::vector<int>> res(N, std::vector<int>(N, 0));
@@ -89,6 +91,7 @@ std::vector<std::vector<int>> zig_zag_decodage(std::vector<int> to_decode) {
 
 	while (added < lgt) {
 		for (; x >= 0 && x < N && y >= 0 && y < N; added++) {
+			// Seul différence par rapport à l'encodage :
 			res[y][x] = to_decode[added];
 
 			if (step) { x++; y--; }
