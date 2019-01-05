@@ -4,6 +4,7 @@
 
 #include "rle.h"
 #include "../jpeg/markers.h"
+#include <stdlib.h>
 #include <cmath>
 #include <iostream>
 
@@ -68,9 +69,6 @@ std::vector<pair_rle> rle(std::vector<int> quantized_zig_zag_block) {
 std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle) {
 	std::vector<pair_dc_ac> res;
 
-	if (std::get<0>(rle[0]) == EOB)
-		res.emplace_back(pair_dc_ac(EOB, ""));
-
 	pair_rle dc = rle[0];
 	unsigned char magn_dc = std::get<0>(dc);
 	int coeff_dc = std::get<1>(dc);
@@ -79,6 +77,17 @@ std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle) {
 	for (int i = 1; i < rle.size(); i++) {
 		pair_rle ac = rle[i];
 		auto zero_n_magn = std::get<0>(ac);
+
+		if (zero_n_magn == EOB) {
+			res.emplace_back(pair_dc_ac(EOB, ""));
+			break;
+		}
+
+		if (zero_n_magn == ZRL) {
+			res.emplace_back(pair_dc_ac(ZRL, ""));
+			continue;
+		}
+
 		int coeff = std::get<1>(ac);
 
 		int magn = zero_n_magn & 0x0F;
@@ -118,5 +127,28 @@ std::vector<int> de_rle(std::vector<pair_rle> rle_values) {
 		res.emplace_back(0);
 	}
 
+	return res;
+}
+
+std::vector<pair_rle> convert_dc_ac_to_rle(std::vector<pair_dc_ac> dc_acs) {
+	std::vector<pair_rle> res;
+
+	for (pair_dc_ac p : dc_acs) {
+		auto byte = std::get<0>(p);
+		auto str = std::get<1>(p);
+
+		int i = (int) strtol(str.c_str(), NULL, 2);
+
+		int limit = int(-(pow(2.0, byte & 0x0F) - 1) + pow(2.0, byte & 0x0F - 1) + 1);
+
+		int coeff = 0;
+
+		if (i > limit) {
+			coeff = int(i - pow(2.0, byte & 0x0F) - 1 + (pow(2, byte & 0x0F - 1) * 2 + 1));
+		} else {
+			coeff = int(i - pow(2.0, byte & 0x0F) + 1);
+		}
+		res.emplace_back(pair_rle(byte, coeff));
+	}
 	return res;
 }

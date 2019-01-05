@@ -53,9 +53,8 @@ std::string write_bits(int magn, int to_code) {
 	std::string res;
 
 	// TODO ligne suivante marche pas
-	auto num = (unsigned long long) (to_code + pow(2, magn) - 1 - (to_code > 0 ? ((pow(2, magn-1) - 1) * 2) : 0));
+	auto num = (unsigned long long) (to_code + pow(2, magn) - 1 - (to_code > 0 ? ((pow(2, magn-1) - 1) * 2) + 1 : 0));
 	std::bitset<Max_Magn> tmp(num);
-	std::cout << tmp.to_ulong() << std::endl;
 	res = tmp.to_string().substr((unsigned long) (Max_Magn - magn), (unsigned long) Max_Magn);
 
 	return res;
@@ -67,5 +66,12 @@ std::string write_bits(int magn, int to_code) {
  * @return Un vecteur de pair_dc_ac
  */
 std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle);
+
+/**
+ * Convertit la représentation binaire en format string du coefficient vers une valeur entière
+ * @param dc_acs
+ * @return
+ */
+std::vector<pair_rle> convert_dc_ac_to_rle(std::vector<pair_dc_ac> dc_acs);
 
 #endif //COMPRESSIONJPEG_RLE_H
