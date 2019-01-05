@@ -12,5 +12,6 @@
 #define EOI 0xD9 // End of Image
 #define DQT 0xDB // Quantization Table
 #define EOB 0x00
+#define ZRL 0xF0
 
 #endif //COMPRESSIONJPEG_MARKERS_H
