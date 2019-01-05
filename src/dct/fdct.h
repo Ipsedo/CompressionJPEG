@@ -19,4 +19,6 @@
  */
 double fdct(std::vector<std::vector<double>> pixelBlock, int i, int j, int N);
 
+std::vector<std::vector<double>> fdct_block(std::vector<std::vector<double>> pixelBlock);
+
 #endif //COMPRESSIONJPEG_FDCT_H

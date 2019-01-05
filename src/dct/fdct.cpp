@@ -17,3 +17,13 @@ double fdct(std::vector<std::vector<double>> pixelBlock, int i, int j, int N) {
 	double c_j = j == 0.0 ? 1.0 / sqrt(2.0) : 1.0;
 	return 2 * c_i * c_j * sum / N;
 }
+
+std::vector<std::vector<double>> fdct_block(std::vector<std::vector<double>> pixelBlock) {
+	int N = pixelBlock.size();
+	std::vector<std::vector<double>> res(N, std::vector<double>(N, 0));
+	for (int i = 0; i < N; i ++)
+		for (int j = 0; j < N; j++)
+			res[i][j] = fdct(pixelBlock, i, j, N);
+
+	return res;
+}
