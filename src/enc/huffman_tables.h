@@ -73,4 +73,8 @@ typedef std::unordered_map<unsigned char, std::string> huff_tbl;
 {0xFA, "1111111111111110"}, \
 })
 
+typedef std::unordered_map<std::string, unsigned char> rev_huff_tbl;
+
+rev_huff_tbl reverse_huffman_table(huff_tbl tbl);
+
 #endif //COMPRESSIONJPEG_HUFFMAN_TABLES_H
