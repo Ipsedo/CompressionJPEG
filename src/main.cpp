@@ -9,6 +9,7 @@
 #include "enc/zig_zag.h"
 #include "enc/huffman_tables.h"
 #include "enc/rle.h"
+#include "bmp/write_bmp.h"
 #include <vector>
 #include <iomanip>
 
@@ -148,6 +149,74 @@ void test_zig_zag() {
 	std::cout << std::endl;
 }
 
+void final_test(int argc, char **argv) {
+	/*if (argc < 2) {
+		std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
+	}*/
+
+	imgRGB img = readBMP("../res/hibiscus_resized.bmp");
+
+	std::cout << "Img width : " << img.width << std::endl;
+	std::cout << "Img height : " << img.height << std::endl;
+
+	//printImg(img, img.width, img.height);
+
+	imgGreyScale imgGS = toGreyScale(img);
+
+	write_grey_scale(imgGS, "out.bmp");
+
+	auto blocks = splitImg(imgGS);
+
+	std::vector<std::vector<std::vector<double>>> dct;
+
+	for (int bl = 0; bl < blocks.size(); bl++) {
+		std::vector<std::vector<double>> tmp;
+		for (int j = 0; j < blocks[bl].size(); j++)
+			tmp.push_back(std::vector<double>(blocks[bl][j].begin(), blocks[bl][j].end()));
+		dct.push_back(tmp);
+	}
+
+	for (int bl = 0; bl < dct.size(); bl++)
+		dct[bl] = fdct_block(dct[bl]);
+
+	std::vector<std::vector<std::vector<double>>> quant;
+
+	for (int bl = 0; bl < dct.size(); bl++)
+		quant.push_back(quantize(dct[bl], Q1));
+
+	std::vector<std::vector<std::vector<int>>> quant_converted;
+	for (int bl = 0; bl < quant.size(); bl++) {
+		std::vector<std::vector<int>> tmp;
+		for (int i = 0; i < quant[bl].size(); i++)
+			tmp.push_back(std::vector<int>(quant[bl][i].begin(), quant[bl][i].end()));
+		quant_converted.push_back(tmp);
+	}
+
+	std::vector<std::vector<int>> zig_zag;
+	for (int bl = 0; bl < quant_converted.size(); bl++) {
+		zig_zag.push_back(zig_zag_encodage(quant_converted[bl]));
+	}
+
+	std::vector<std::vector<pair_rle>> rle_blocks;
+	for (int bl = 0; bl < zig_zag.size(); bl++)
+		rle_blocks.push_back(rle(zig_zag[bl]));
+
+	std::vector<pair_rle> concatenated;
+	for (int bl = 0; bl < rle_blocks.size(); bl++) {
+		for (int i = 0; i < rle_blocks[bl].size(); i++)
+			concatenated.push_back(rle_blocks[bl][i]);
+	}
+
+	long nb_bits = 0;
+	for (int i = 0; i < concatenated.size(); i++) {
+		unsigned char rle_marker = std::get<0>(concatenated[i]);
+		nb_bits += 8 + (rle_marker | 0x0F); // Un octet pour la balise rle + le nombre de bit indiquant la magnitude
+	}
+	std::cout << nb_bits / 8 << std::endl;
+
+	//TODO faire decompression
+}
+
 int main(int argc, char **argv) {
 
 	/*if (argc < 2) {
@@ -156,12 +225,14 @@ int main(int argc, char **argv) {
 
 	test_bmp(argv[1]);*/
 
-	test_all();
+	//test_all();
 
 	/*huff_tbl dc_tbl1 = DC1_LENGTH;
 	std::cout << dc_tbl1[EOB] << std::endl;*/
 
 	//test_zig_zag();
+
+	final_test(argc, argv);
 
 	return 0;
 }
