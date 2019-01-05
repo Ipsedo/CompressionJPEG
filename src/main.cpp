@@ -23,11 +23,17 @@ void test_bmp(std::string file_name) {
 
 	imgGreyScale imgGS = toGreyScale(img);
 
+	write_grey_scale(imgGS, "out_original.bmp");
+
 	auto blocks = splitImg(imgGS);
+
+	auto desplitted = deSplitImg(blocks, imgGS.width, imgGS.height);
 
 	std::cout << blocks.size() << std::endl;
 
 	std::cout << imgGS.width << ", " << img.height << std::endl;
+
+	write_grey_scale(desplitted, "out_desplitted.bmp");
 }
 
 void test_all() {
@@ -115,12 +121,19 @@ void test_all() {
 		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(rle_res[i])) << std::dec << ", " << std::get<1>(rle_res[i]) <<"] ";
 	std::cout << std::endl << std::endl;
 
-	std::vector<pair_dc_ac> pre_coded_dc_ac = write_dc_acs(rle_res);
+	/*std::vector<pair_dc_ac> pre_coded_dc_ac = write_dc_acs(rle_res);
 
 	std::cout << "Pre coded DC and AC" << std::endl;
 	for (int i = 0; i < pre_coded_dc_ac.size(); i++)
 		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(pre_coded_dc_ac[i])) << std::dec << ", " << std::get<1>(pre_coded_dc_ac[i]) <<"] ";
-	std::cout << std::endl << std::endl;
+	std::cout << std::endl << std::endl;*/
+
+	std::cout << "de RLE" << std::endl;
+	auto inv_rle = de_rle(rle_res);
+
+	for (int i : inv_rle)
+		std::cout << i << ", ";
+	std::cout << std::endl;
 }
 
 void test_zig_zag() {
@@ -147,6 +160,17 @@ void test_zig_zag() {
 	for (int i = 0; i < res.size(); i++)
 		std::cout << res[i] << ", ";
 	std::cout << std::endl;
+
+	std::cout << "De zig zag" << std::endl;
+	auto de_zig_zag = zig_zag_decodage(res);
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			std::cout << std::setfill(' ') << std::setw(2) << de_zig_zag[i][j] << ", ";
+			curr++;
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 }
 
 void final_test(int argc, char **argv) {
@@ -154,7 +178,7 @@ void final_test(int argc, char **argv) {
 		std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
 	}*/
 
-	imgRGB img = readBMP("../res/hibiscus.bmp");
+	imgRGB img = readBMP("res/hibiscus.bmp");
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
@@ -163,7 +187,7 @@ void final_test(int argc, char **argv) {
 
 	imgGreyScale imgGS = toGreyScale(img);
 
-	write_grey_scale(imgGS, "out.bmp");
+	write_grey_scale(imgGS, "original.bmp");
 
 	auto blocks = splitImg(imgGS);
 
@@ -214,16 +238,53 @@ void final_test(int argc, char **argv) {
 	}
 	std::cout<< "(compressé / original) : " << nb_bits / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
 
-	//TODO faire decompression
+	/**
+	 * Décompression
+	 */
+
+	std::vector<std::vector<int>> inv_rle;
+	for (int bl = 0; bl < rle_blocks.size(); bl++)
+		inv_rle.push_back(de_rle(rle_blocks[bl]));
+
+	std::vector<std::vector<std::vector<int>>> de_zig_zag;
+	for (int bl = 0; bl < inv_rle.size(); bl++)
+		de_zig_zag.push_back(zig_zag_decodage(inv_rle[bl]));
+
+	std::vector<std::vector<std::vector<double>>> de_zig_zag_converted;
+	for (int bl = 0; bl < de_zig_zag.size(); bl++) {
+		std::vector<std::vector<double>> tmp;
+		for (int i = 0; i < de_zig_zag[bl].size(); i++)
+			tmp.push_back(std::vector<double>(de_zig_zag[bl][i].begin(), de_zig_zag[bl][i].end()));
+		de_zig_zag_converted.push_back(tmp);
+	}
+
+	std::vector<std::vector<std::vector<double>>> de_quantified;
+	for (int bl = 0; bl < de_zig_zag_converted.size(); bl++)
+		de_quantified.push_back(de_quantize(de_zig_zag_converted[bl], Q1));
+
+	std::vector<std::vector<std::vector<double>>> inv_dct;
+	for (int bl = 0; bl < de_quantified.size(); bl++)
+		inv_dct.push_back(idct_block(de_quantified[bl]));
+
+	std::vector<std::vector<std::vector<int>>> inv_dct_converted;
+	for (int bl = 0; bl < inv_dct.size(); bl++) {
+		std::vector<std::vector<int>> tmp;
+		for (int i = 0; i < inv_dct[bl].size(); i++)
+			tmp.push_back(std::vector<int>(inv_dct[bl][i].begin(), inv_dct[bl][i].end()));
+		inv_dct_converted.push_back(tmp);
+	}
+
+	auto img_compressed = deSplitImg(inv_dct_converted, img.width, img.height);
+	write_grey_scale(img_compressed, "compressed.bmp");
 }
 
 int main(int argc, char **argv) {
 
 	/*if (argc < 2) {
 	  std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
-	}
+	}*/
 
-	test_bmp(argv[1]);*/
+	//test_bmp("res/hibiscus.bmp");
 
 	//test_all();
 
