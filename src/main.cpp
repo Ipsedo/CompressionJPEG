@@ -173,26 +173,30 @@ void test_zig_zag() {
 	std::cout << std::endl;
 }
 
-void final_test(int argc, char **argv) {
-	/*if (argc < 2) {
-		std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
-	}*/
+/**
+ * Test de compression puis de de-compression
+ * Résultats écrits sur des images bmp
+ */
+void final_test() {
 
+	// Lecture de l'image bmp non compressée
 	imgRGB img = readBMP("res/hibiscus.bmp");
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
 
-	//printImg(img, img.width, img.height);
-
+	// Conversion vers une image en nuance de gris
 	imgGreyScale imgGS = toGreyScale(img);
 
+	// Ecriture de l'image témoin dans un fichier "original.bmp"
 	write_grey_scale(imgGS, "original.bmp");
 
+	// Découpage de l'image en blocks
 	auto blocks = splitImg(imgGS);
 
 	std::vector<std::vector<std::vector<double>>> dct;
 
+	// Conversion int vers double
 	for (int bl = 0; bl < blocks.size(); bl++) {
 		std::vector<std::vector<double>> tmp;
 		for (int j = 0; j < blocks[bl].size(); j++)
@@ -200,14 +204,17 @@ void final_test(int argc, char **argv) {
 		dct.emplace_back(tmp);
 	}
 
+	// On applique la DCT
 	for (int bl = 0; bl < dct.size(); bl++)
 		dct[bl] = fdct_block(dct[bl]);
 
 	std::vector<std::vector<std::vector<double>>> quant;
 
+	// Puis la quantifiction
 	for (int bl = 0; bl < dct.size(); bl++)
 		quant.emplace_back(quantize(dct[bl], Q1));
 
+	// Il faut convertir : double vers int
 	std::vector<std::vector<std::vector<int>>> quant_converted;
 	for (int bl = 0; bl < quant.size(); bl++) {
 		std::vector<std::vector<int>> tmp;
@@ -216,15 +223,19 @@ void final_test(int argc, char **argv) {
 		quant_converted.emplace_back(tmp);
 	}
 
+	// On applique ensuite l'encodage zig-zag
 	std::vector<std::vector<int>> zig_zag;
 	for (int bl = 0; bl < quant_converted.size(); bl++) {
 		zig_zag.emplace_back(zig_zag_encodage(quant_converted[bl]));
 	}
 
+	// Puis la compression RLE
 	std::vector<std::vector<pair_rle>> rle_blocks;
 	for (int bl = 0; bl < zig_zag.size(); bl++)
 		rle_blocks.emplace_back(rle(zig_zag[bl]));
 
+	// On concatene tout les pair_rle pour mesurer
+	// l'espace mémoire occupé par uniquement les pixels
 	std::vector<pair_rle> concatenated;
 	for (int bl = 0; bl < rle_blocks.size(); bl++) {
 		for (int i = 0; i < rle_blocks[bl].size(); i++)
@@ -234,22 +245,33 @@ void final_test(int argc, char **argv) {
 	long nb_bits = 0;
 	for (int i = 0; i < concatenated.size(); i++) {
 		unsigned char rle_marker = std::get<0>(concatenated[i]);
-		nb_bits += 8 + (rle_marker | 0x0F); // Un octet pour la balise rle + le nombre de bit pour la magnitude
+		// Un octet pour la balise rle :
+		//  - 0x54 : 5 zéros et le coefficient suivant sur 4 bits
+		// On ajoute donc 8 bit pour la balise
+		// puis le nombre de bits de la magnitude du prochain coefficient
+		nb_bits += 8 + (rle_marker | 0x0F);
 	}
+	// On obtient ainsi une idée de la compression de notre image :
+	// En partant du principe que l'image originale contient des valeurs de gris
+	// entre 0 et 255 (un byte)
+	// On écarte volontairement les entête de fichier pour bmp et jpeg
 	std::cout<< "(compressé / original) : " << nb_bits / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
 
 	/**
 	 * Décompression
 	 */
 
+	// Décodage RLE
 	std::vector<std::vector<int>> inv_rle;
 	for (int bl = 0; bl < rle_blocks.size(); bl++)
 		inv_rle.emplace_back(de_rle(rle_blocks[bl]));
 
+	// Décodage zig zag
 	std::vector<std::vector<std::vector<int>>> de_zig_zag;
 	for (int bl = 0; bl < inv_rle.size(); bl++)
 		de_zig_zag.emplace_back(zig_zag_decodage(inv_rle[bl]));
 
+	// Conversion int vers double
 	std::vector<std::vector<std::vector<double>>> de_zig_zag_converted;
 	for (int bl = 0; bl < de_zig_zag.size(); bl++) {
 		std::vector<std::vector<double>> tmp;
@@ -258,14 +280,17 @@ void final_test(int argc, char **argv) {
 		de_zig_zag_converted.emplace_back(tmp);
 	}
 
+	// De-quantification
 	std::vector<std::vector<std::vector<double>>> de_quantified;
 	for (int bl = 0; bl < de_zig_zag_converted.size(); bl++)
 		de_quantified.emplace_back(de_quantize(de_zig_zag_converted[bl], Q1));
 
+	// DCT inverse
 	std::vector<std::vector<std::vector<double>>> inv_dct;
 	for (int bl = 0; bl < de_quantified.size(); bl++)
 		inv_dct.emplace_back(idct_block(de_quantified[bl]));
 
+	// Conversion double vers int
 	std::vector<std::vector<std::vector<int>>> inv_dct_converted;
 	for (int bl = 0; bl < inv_dct.size(); bl++) {
 		std::vector<std::vector<int>> tmp;
@@ -274,8 +299,11 @@ void final_test(int argc, char **argv) {
 		inv_dct_converted.emplace_back(tmp);
 	}
 
+	// Re-assemblage des block pour obtenir l'image dé-compréssée
 	auto img_compressed = deSplitImg(inv_dct_converted, img.width, img.height);
-	write_grey_scale(img_compressed, "compressed.bmp");
+
+	// Ecriture de l'image dé-compressé vers le fichier "decompressed.bmp"
+	write_grey_scale(img_compressed, "decompressed.bmp");
 }
 
 int main(int argc, char **argv) {
@@ -293,7 +321,7 @@ int main(int argc, char **argv) {
 
 	//test_zig_zag();
 
-	final_test(argc, argv);
+	final_test();
 
 	return 0;
 }
