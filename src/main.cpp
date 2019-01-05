@@ -154,7 +154,7 @@ void final_test(int argc, char **argv) {
 		std::cout << "arg 1 must be the bmp file name to convert" << std::endl;
 	}*/
 
-	imgRGB img = readBMP("../res/hibiscus_resized.bmp");
+	imgRGB img = readBMP("../res/hibiscus.bmp");
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
@@ -210,9 +210,9 @@ void final_test(int argc, char **argv) {
 	long nb_bits = 0;
 	for (int i = 0; i < concatenated.size(); i++) {
 		unsigned char rle_marker = std::get<0>(concatenated[i]);
-		nb_bits += 8 + (rle_marker | 0x0F); // Un octet pour la balise rle + le nombre de bit indiquant la magnitude
+		nb_bits += 8 + (rle_marker | 0x0F); // Un octet pour la balise rle + le nombre de bit pour la magnitude
 	}
-	std::cout << nb_bits / 8 << std::endl;
+	std::cout<< "(compressé / original) : " << nb_bits / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
 
 	//TODO faire decompression
 }
