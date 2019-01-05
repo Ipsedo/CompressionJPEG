@@ -14,4 +14,6 @@
  */
 std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode);
 
+std::vector<std::vector<int>> zig_zag_decodage(std::vector<int> to_decode);
+
 #endif //COMPRESSIONJPEG_ZIG_ZAG_H
