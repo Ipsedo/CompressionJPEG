@@ -22,9 +22,9 @@ void write_grey_scale(imgGreyScale img_grey_scale, std::string output_file) {
 		for(int j=0; j<h; j++)
 		{
 			x=i; y=(h-1)-j;
-			r = img_grey_scale.pixels[i][j];
-			g = img_grey_scale.pixels[i][j];
-			b = img_grey_scale.pixels[i][j];
+			r = img_grey_scale.pixels[j][i];
+			g = img_grey_scale.pixels[j][i];
+			b = img_grey_scale.pixels[j][i];
 			img[(x+y*w)*3+2] = (unsigned char)(r);
 			img[(x+y*w)*3+1] = (unsigned char)(g);
 			img[(x+y*w)*3+0] = (unsigned char)(b);
