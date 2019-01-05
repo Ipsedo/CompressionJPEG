@@ -8,6 +8,9 @@
 #include <vector>
 
 // From wikipedia https://fr.wikipedia.org/wiki/JPEG#Quantification
+/**
+ * Une matrice de quantification suggérée
+ */
 #define Q1 std::vector<std::vector<double>> { {16,11,10,16,24,40,51,61}, \
                                               {12,12,14,19,26,58,60,55}, \
                                               {14,13,16,24,40,57,69,56}, \

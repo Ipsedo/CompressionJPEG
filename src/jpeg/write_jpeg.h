@@ -7,6 +7,10 @@
 
 #include <string>
 
+/**
+ * Essai d'écriture fichier JPEG
+ * @param output_file_name
+ */
 void write_jpeg(std::string output_file_name);
 
 #endif //COMPRESSIONJPEG_WRITE_JPEG_H

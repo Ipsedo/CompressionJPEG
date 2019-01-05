@@ -8,10 +8,10 @@
 #include <vector>
 
 /**
- *
- * @param F the forward DCT output
- * @param Q the quantization matrix
- * @return the quantized FDCT
+ * Quantifie une matrice selon une matrice de quantification
+ * @param F La matrice de fréquences à quantifier
+ * @param Q La matrice de quantification
+ * @return La matrice de fréquences quantifiée
  */
 std::vector<std::vector<double>> quantize(std::vector<std::vector<double>> F, std::vector<std::vector<double>> Q);
 

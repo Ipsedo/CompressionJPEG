@@ -7,6 +7,12 @@
 
 #include <vector>
 
+/**
+ * De-quantifie la matrice de fréquence selon une matrice de quantification
+ * @param F_prime La matrice de fréquence à de-quantifier
+ * @param Q La matrice de quantification
+ * @return La matrice  de fréquence de-quantifié
+ */
 std::vector<std::vector<double>>
 de_quantize(std::vector<std::vector<double>> F_prime, std::vector<std::vector<double>> Q);
 
