@@ -106,12 +106,12 @@ void test_all() {
 		std::cout << zig_zag_res[i] << ", ";
 	std::cout << std::endl << std::endl;
 
-	std::vector<unsigned char> rle_res = rle(zig_zag_res);
+	std::vector<pair_rle> rle_res = rle(zig_zag_res);
 
 	std::cout << "RLE" << std::endl;
 
 	for (int i = 0; i < rle_res.size(); i++)
-		std::cout << std::hex << static_cast<unsigned int>(rle_res[i]) << std::dec << ", ";
+		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(rle_res[i])) << std::dec << ", " << std::get<1>(rle_res[i]) <<"] ";
 	std::cout << std::endl;
 
 }
