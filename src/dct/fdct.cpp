@@ -3,7 +3,7 @@
 //
 
 #include "fdct.h"
-#include <math.h>
+#include <cmath>
 
 double fdct(std::vector<std::vector<double>> pixelBlock, int i, int j, int N) {
 	double sum = 0.0;
@@ -19,7 +19,7 @@ double fdct(std::vector<std::vector<double>> pixelBlock, int i, int j, int N) {
 }
 
 std::vector<std::vector<double>> fdct_block(std::vector<std::vector<double>> pixelBlock) {
-	int N = pixelBlock.size();
+	auto N = pixelBlock.size();
 	std::vector<std::vector<double>> res(N, std::vector<double>(N, 0));
 	for (int i = 0; i < N; i ++)
 		for (int j = 0; j < N; j++)

@@ -6,7 +6,7 @@
 #define COMPRESSIONJPEG_RLE_H
 
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include <bitset>
 #include <tuple>
 #include <iostream>
@@ -24,10 +24,10 @@ std::string write_bits(int magn, int to_code) {
 	std::string res;
 
 	// TODO ligne suivante marche pas
-	int num = to_code + pow(2, magn) - 1 - (to_code > 0 ? ((pow(2, magn-1) - 1) * 2) : 0);
+	auto num = (unsigned long long) (to_code + pow(2, magn) - 1 - (to_code > 0 ? ((pow(2, magn-1) - 1) * 2) : 0));
 	std::bitset<Max_Magn> tmp(num);
 	std::cout << tmp.to_ulong() << std::endl;
-	res = tmp.to_string().substr(Max_Magn - magn, Max_Magn);
+	res = tmp.to_string().substr((unsigned long) (Max_Magn - magn), (unsigned long) Max_Magn);
 
 	return res;
 }

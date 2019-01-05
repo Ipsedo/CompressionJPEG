@@ -12,9 +12,9 @@ de_quantize(std::vector<std::vector<double>> F_prime, std::vector<std::vector<do
 	for (int u = 0; u < F_prime.size(); u++) {
 		std::vector<double> line;
 		for (int v = 0; v < F_prime[u].size(); v++) {
-			line.push_back(F_prime[u][v] * Q[u][v]);
+			line.emplace_back(F_prime[u][v] * Q[u][v]);
 		}
-		res.push_back(line);
+		res.emplace_back(line);
 	}
 
 	return res;

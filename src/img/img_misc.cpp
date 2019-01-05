@@ -3,7 +3,7 @@
 //
 
 #include "img_misc.h"
-#include <math.h>
+#include <cmath>
 
 void printImg(imgRGB img, int widthLimit, int heightLimit) {
 	if (widthLimit > img.width) {
@@ -42,9 +42,9 @@ imgGreyScale toGreyScale(imgRGB img) {
 	for (int i = 0; i < res.height; i++) {
 		std::vector<int> tmp;
 		for (int j = 0; j < res.width; j++) {
-			tmp.push_back((std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j])) / 3);
+			tmp.emplace_back((std::get<0>(img.pixels[i][j]) + std::get<1>(img.pixels[i][j]) + std::get<2>(img.pixels[i][j])) / 3);
 		}
-		res.pixels.push_back(tmp);
+		res.pixels.emplace_back(tmp);
 	}
 	return res;
 }
@@ -54,7 +54,7 @@ std::vector<std::vector<std::vector<int>>> splitImg(imgGreyScale img) {
 
 	for (int y = 0; y < img.height; y += 8) {
 		for (int x = 0; x < img.width; x += 8) {
-			res.push_back(makeBlock(img, x, y));
+			res.emplace_back(makeBlock(img, x, y));
 		}
 	}
 
@@ -73,7 +73,7 @@ std::vector<std::vector<int>> makeBlock(imgGreyScale img, int x, int y) {
 			else
 				tmp[j] = PADDING;
 		}
-		res.push_back(tmp);
+		res.emplace_back(tmp);
 	}
 
 	return res;
@@ -85,7 +85,7 @@ imgGreyScale deSplitImg(std::vector<std::vector<std::vector<int>>> to_de_split, 
 	res.width = width;
 	res.height = height;
 
-	res.pixels = std::vector<std::vector<int>> (res.height, std::vector<int>(res.width, 0));
+	res.pixels = std::vector<std::vector<int>> ((unsigned long) res.height, std::vector<int>(res.width, 0));
 
 	for (int y = 0; y < height; y += 8) {
 		for (int x = 0; x < width; x += 8) {

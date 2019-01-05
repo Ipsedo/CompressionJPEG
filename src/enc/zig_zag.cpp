@@ -3,7 +3,7 @@
 //
 
 #include "zig_zag.h"
-#include <math.h>
+#include <cmath>
 
 std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode) {
 	std::vector<int> res;
@@ -32,7 +32,7 @@ std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode) {
 
 	while (added < lgt) {
 		for (; x >= 0 && x < N && y >= 0 && y < N; added++) {
-			res.push_back(to_encode[y][x]);
+			res.emplace_back(to_encode[y][x]);
 
 			if (step) { x++; y--; } // diagonale haut droit
 			else { x--; y++; }      // diagonale bas gauche
@@ -74,7 +74,7 @@ std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode) {
 
 
 std::vector<std::vector<int>> zig_zag_decodage(std::vector<int> to_decode) {
-	auto N = sqrt(to_decode.size());
+	auto N = (unsigned long) sqrt(to_decode.size());
 
 	std::vector<std::vector<int>> res(N, std::vector<int>(N, 0));
 

@@ -40,10 +40,10 @@ imgRGB readBMP(std::string fileName) {
 
 		for (int j = 0; j < width * 3; j += 3) {
 			color c((unsigned char) tmp[j + 2], (unsigned char) tmp[j + 1], (unsigned char) tmp[j]);
-			row.push_back(c);
+			row.emplace_back(c);
 		}
 
-		pixels.push_back(row);
+		pixels.emplace_back(row);
 		delete[] tmp;
 	}
 

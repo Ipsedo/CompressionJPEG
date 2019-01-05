@@ -55,10 +55,10 @@ void test_all() {
 		std::vector<double> tmp;
 		for (int j = 0; j < N; j++) {
 			std::cout << r[i][j] << ", ";
-			tmp.push_back(fdct(r, i, j, N));
+			tmp.emplace_back(fdct(r, i, j, N));
 		}
 		std::cout << std::endl;
-		dct.push_back(tmp);
+		dct.emplace_back(tmp);
 	}
 	std::cout << std::endl;
 
@@ -104,7 +104,7 @@ void test_all() {
 
 	std::vector<std::vector<int>> quantized_converted;
 	for (int i = 0; i < quantized.size(); i++)
-		quantized_converted.push_back(std::vector<int>(quantized[i].begin(), quantized[i].end()));
+		quantized_converted.emplace_back(std::vector<int>(quantized[i].begin(), quantized[i].end()));
 
 	std::vector<int> zig_zag_res = zig_zag_encodage(quantized_converted);
 
@@ -146,12 +146,12 @@ void test_zig_zag() {
 	for (int i = 0; i < N; i++) {
 		std::vector<int> line;
 		for (int j = 0; j < N; j++) {
-			line.push_back(curr);
+			line.emplace_back(curr);
 			std::cout << std::setfill(' ') << std::setw(2) << curr << ", ";
 			curr++;
 		}
 		std::cout << std::endl;
-		v.push_back(line);
+		v.emplace_back(line);
 	}
 	std::cout << std::endl;
 
@@ -196,8 +196,8 @@ void final_test(int argc, char **argv) {
 	for (int bl = 0; bl < blocks.size(); bl++) {
 		std::vector<std::vector<double>> tmp;
 		for (int j = 0; j < blocks[bl].size(); j++)
-			tmp.push_back(std::vector<double>(blocks[bl][j].begin(), blocks[bl][j].end()));
-		dct.push_back(tmp);
+			tmp.emplace_back(std::vector<double>(blocks[bl][j].begin(), blocks[bl][j].end()));
+		dct.emplace_back(tmp);
 	}
 
 	for (int bl = 0; bl < dct.size(); bl++)
@@ -206,29 +206,29 @@ void final_test(int argc, char **argv) {
 	std::vector<std::vector<std::vector<double>>> quant;
 
 	for (int bl = 0; bl < dct.size(); bl++)
-		quant.push_back(quantize(dct[bl], Q1));
+		quant.emplace_back(quantize(dct[bl], Q1));
 
 	std::vector<std::vector<std::vector<int>>> quant_converted;
 	for (int bl = 0; bl < quant.size(); bl++) {
 		std::vector<std::vector<int>> tmp;
 		for (int i = 0; i < quant[bl].size(); i++)
-			tmp.push_back(std::vector<int>(quant[bl][i].begin(), quant[bl][i].end()));
-		quant_converted.push_back(tmp);
+			tmp.emplace_back(std::vector<int>(quant[bl][i].begin(), quant[bl][i].end()));
+		quant_converted.emplace_back(tmp);
 	}
 
 	std::vector<std::vector<int>> zig_zag;
 	for (int bl = 0; bl < quant_converted.size(); bl++) {
-		zig_zag.push_back(zig_zag_encodage(quant_converted[bl]));
+		zig_zag.emplace_back(zig_zag_encodage(quant_converted[bl]));
 	}
 
 	std::vector<std::vector<pair_rle>> rle_blocks;
 	for (int bl = 0; bl < zig_zag.size(); bl++)
-		rle_blocks.push_back(rle(zig_zag[bl]));
+		rle_blocks.emplace_back(rle(zig_zag[bl]));
 
 	std::vector<pair_rle> concatenated;
 	for (int bl = 0; bl < rle_blocks.size(); bl++) {
 		for (int i = 0; i < rle_blocks[bl].size(); i++)
-			concatenated.push_back(rle_blocks[bl][i]);
+			concatenated.emplace_back(rle_blocks[bl][i]);
 	}
 
 	long nb_bits = 0;
@@ -244,34 +244,34 @@ void final_test(int argc, char **argv) {
 
 	std::vector<std::vector<int>> inv_rle;
 	for (int bl = 0; bl < rle_blocks.size(); bl++)
-		inv_rle.push_back(de_rle(rle_blocks[bl]));
+		inv_rle.emplace_back(de_rle(rle_blocks[bl]));
 
 	std::vector<std::vector<std::vector<int>>> de_zig_zag;
 	for (int bl = 0; bl < inv_rle.size(); bl++)
-		de_zig_zag.push_back(zig_zag_decodage(inv_rle[bl]));
+		de_zig_zag.emplace_back(zig_zag_decodage(inv_rle[bl]));
 
 	std::vector<std::vector<std::vector<double>>> de_zig_zag_converted;
 	for (int bl = 0; bl < de_zig_zag.size(); bl++) {
 		std::vector<std::vector<double>> tmp;
 		for (int i = 0; i < de_zig_zag[bl].size(); i++)
-			tmp.push_back(std::vector<double>(de_zig_zag[bl][i].begin(), de_zig_zag[bl][i].end()));
-		de_zig_zag_converted.push_back(tmp);
+			tmp.emplace_back(std::vector<double>(de_zig_zag[bl][i].begin(), de_zig_zag[bl][i].end()));
+		de_zig_zag_converted.emplace_back(tmp);
 	}
 
 	std::vector<std::vector<std::vector<double>>> de_quantified;
 	for (int bl = 0; bl < de_zig_zag_converted.size(); bl++)
-		de_quantified.push_back(de_quantize(de_zig_zag_converted[bl], Q1));
+		de_quantified.emplace_back(de_quantize(de_zig_zag_converted[bl], Q1));
 
 	std::vector<std::vector<std::vector<double>>> inv_dct;
 	for (int bl = 0; bl < de_quantified.size(); bl++)
-		inv_dct.push_back(idct_block(de_quantified[bl]));
+		inv_dct.emplace_back(idct_block(de_quantified[bl]));
 
 	std::vector<std::vector<std::vector<int>>> inv_dct_converted;
 	for (int bl = 0; bl < inv_dct.size(); bl++) {
 		std::vector<std::vector<int>> tmp;
 		for (int i = 0; i < inv_dct[bl].size(); i++)
-			tmp.push_back(std::vector<int>(inv_dct[bl][i].begin(), inv_dct[bl][i].end()));
-		inv_dct_converted.push_back(tmp);
+			tmp.emplace_back(std::vector<int>(inv_dct[bl][i].begin(), inv_dct[bl][i].end()));
+		inv_dct_converted.emplace_back(tmp);
 	}
 
 	auto img_compressed = deSplitImg(inv_dct_converted, img.width, img.height);

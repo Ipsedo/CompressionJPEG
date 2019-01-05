@@ -3,7 +3,7 @@
 //
 
 #include "idct.h"
-#include <math.h>
+#include <cmath>
 
 double idct(std::vector<std::vector<double>> blockDCT, int x, int y, int N) {
 	double sum = 0.0;
@@ -20,7 +20,7 @@ double idct(std::vector<std::vector<double>> blockDCT, int x, int y, int N) {
 
 
 std::vector<std::vector<double>> idct_block(std::vector<std::vector<double>> blockDCT) {
-	int N = blockDCT.size();
+	auto N = blockDCT.size();
 	std::vector<std::vector<double>> res(N, std::vector<double>(N, 0));
 	for (int i = 0; i < N; i ++)
 		for (int j = 0; j < N; j++)
