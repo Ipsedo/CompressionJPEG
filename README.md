@@ -7,6 +7,8 @@ _David Biard, Samuel Berrien_
 ## Informations
 Usage :
 ```renderscript
+$ git clone https://github.com/Ipsedo/CompressionJPEG.git
+$ cd CompressionJPEG
 $ ./build.sh
-$ ./build/CompressionJPEG res/hibiscus_resized.bmp
+$ ./build/CompressionJPEG
 ```
