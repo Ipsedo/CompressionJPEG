@@ -7,22 +7,22 @@
 #include <cmath>
 #include <iostream>
 
-std::vector<pair_rle> rle(std::vector<int> quantized_block) {
+std::vector<pair_rle> rle(std::vector<int> quantized_zig_zag_block) {
 	std::vector<pair_rle> res;
 
-	for (int i = 0; i < quantized_block.size(); i++) {
+	for (int i = 0; i < quantized_zig_zag_block.size(); i++) {
 		bool all_zero = true;
 		int nb_zero = 0;
 
-		for (int j = i; j < quantized_block.size(); j++) {
-			if (abs(quantized_block[j]) != 0) {
+		for (int j = i; j < quantized_zig_zag_block.size(); j++) {
+			if (abs(quantized_zig_zag_block[j]) != 0) {
 				all_zero = false;
 				break;
 			} else
 				nb_zero++;
 		}
 		if (all_zero) {
-			i = (int) quantized_block.size();
+			i = (int) quantized_zig_zag_block.size();
 			res.emplace_back(pair_rle(EOB, 0));
 		} else {
 			int zero_restant = nb_zero;
@@ -39,8 +39,8 @@ std::vector<pair_rle> rle(std::vector<int> quantized_block) {
 
 			auto to_write = (unsigned char) zero_restant << 4;
 			i += zero_restant;
-			to_write |= (unsigned char) ceil(log(abs(quantized_block[i]) + 1) / log(2.0));
-			res.emplace_back(pair_rle(to_write, quantized_block[i]));
+			to_write |= (unsigned char) ceil(log(abs(quantized_zig_zag_block[i]) + 1) / log(2.0));
+			res.emplace_back(pair_rle(to_write, quantized_zig_zag_block[i]));
 		}
 	}
 
