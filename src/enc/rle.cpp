@@ -7,8 +7,8 @@
 #include <math.h>
 #include <iostream>
 
-std::vector<unsigned char> rle(std::vector<int> quantized_block) {
-	std::vector<unsigned char> res;
+std::vector<pair_rle> rle(std::vector<int> quantized_block) {
+	std::vector<pair_rle> res;
 
 	for (int i = 0; i < quantized_block.size(); i++) {
 		bool all_zero = true;
@@ -23,31 +23,30 @@ std::vector<unsigned char> rle(std::vector<int> quantized_block) {
 		}
 		if (all_zero) {
 			i = quantized_block.size();
-			res.push_back(EOB);
+			res.push_back(pair_rle(EOB, 0));
 		} else {
 			int zero_restant = nb_zero;
 			if (zero_restant >= 16) {
-				res.push_back(ZRL);
+				res.push_back(pair_rle(ZRL,0));
 				zero_restant -= 16;
 				i += 16;
 			}
+
 			if (zero_restant > 16) {
 				std::cout << "pb all zero > 16" << std::endl;
 				exit(1);
 			}
-			if (zero_restant > 0) {
-				// TODO 5 zeros suivi d'un 2 -> 0x52
-				// TODO Marche pas
-				auto z = (unsigned char) zero_restant;
-				unsigned char to_write = 0 | z >> 4;
-				i += zero_restant;
-				to_write |= (unsigned char) quantized_block[i];
-				res.push_back(to_write);
-			} else {
-				res.push_back((unsigned char) quantized_block[i]);
-			}
+			
+			std::cout << "a " << std::hex << (zero_restant << 4) << std::endl;
+			unsigned char to_write = zero_restant << 4;
+			i += zero_restant;
+			std::cout << std::hex << static_cast<unsigned int>(to_write) << std::dec << std::endl;
+			to_write |= (unsigned char) ceil(log(abs(quantized_block[i]) + 1) / log(2.0));
+			std::cout << std::hex << static_cast<unsigned int>(to_write) << std::dec << std::endl;
+			res.push_back(pair_rle(to_write, quantized_block[i]));
 		}
 	}
+
 
 	return res;
 }
