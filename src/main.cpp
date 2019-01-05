@@ -180,7 +180,7 @@ void test_zig_zag() {
 void final_test() {
 
 	// Lecture de l'image bmp non compressée
-	imgRGB img = readBMP("res/hibiscus.bmp");
+	imgRGB img = readBMP("res/MARBLES.BMP");
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
