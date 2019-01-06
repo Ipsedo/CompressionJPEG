@@ -15,10 +15,10 @@
  * Test de compression puis de de-compression
  * Résultats écrits sur des images bmp
  */
-void final_test() {
+void final_test(std::string file_name) {
 
 	// Lecture de l'image bmp non compressée
-	imgRGB img = readBMP("./res/MARBLES.BMP");
+	imgRGB img = readBMP(file_name);
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
@@ -52,12 +52,18 @@ int main(int argc, char **argv) {
 
 	//test_zig_zag();
 
-	final_test();
-
 	/*auto str = write_bits<10>(4, -15);
 	std::cout << -15 << " " << str << std::endl;
 	auto i = decode_bits(str, 4);
 	std::cout << i << std::endl;*/
+
+	if (argc < 2) {
+		std::cout << "Must specify a bmp file !" << std::endl;
+		return 0;
+	}
+
+	final_test(argv[1]);
+
 
 	return 0;
 }
