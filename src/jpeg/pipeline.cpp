@@ -48,29 +48,23 @@ std::string make_compressed_blocks(imgGreyScale imgGS, jpeg_tools tools) {
 
 	// On applique ensuite l'encodage zig-zag
 	std::vector<std::vector<int>> zig_zag;
-	for (int bl = 0; bl < quant_converted.size(); bl++) {
+	for (int bl = 0; bl < quant_converted.size(); bl++)
 		zig_zag.emplace_back(zig_zag_encodage(quant_converted[bl]));
-	}
 
 	// Puis la compression RLE
 	std::vector<std::vector<pair_rle>> rle_blocks;
 	for (int bl = 0; bl < zig_zag.size(); bl++)
 		rle_blocks.emplace_back(rle(zig_zag[bl]));
 
-
+	// Codage des coefficients
 	std::vector<std::vector<pair_dc_ac>> dc_ac_blocks;
 	for (int bl = 0; bl < rle_blocks.size(); bl++)
 		dc_ac_blocks.push_back(write_dc_acs(rle_blocks[bl]));
 
-
+	// Codage de Huffman
 	std::string compressed_huffman;
-	int cpt = 0;
-	std::string max(64, 'a');
-	for (int bl = 0; bl < rle_blocks.size(); bl++, cpt++) {
-		auto tmp = encode_huffman(dc_ac_blocks[bl], tools.DC_code, tools.AC_code);
-		max = max.length() > tmp.length() ? tmp : max;
-		compressed_huffman += tmp;
-	}
+	for (int bl = 0; bl < rle_blocks.size(); bl++)
+		compressed_huffman += encode_huffman(dc_ac_blocks[bl], tools.DC_code, tools.AC_code);
 
 	return compressed_huffman;
 }
@@ -83,7 +77,7 @@ imgGreyScale decompress_blocks(std::string compressed_blocks, int width, int hei
 	std::vector<std::vector<pair_dc_ac>> de_huffman = decode_huffman(move(compressed_blocks), DC1_LENGTH_REV,
 																	 AC_CODE_REV);
 
-	// Conversion coeff : string binary repr vers int
+	// Conversion coeff : string binary representation vers int
 	std::vector<std::vector<pair_rle>> de_dc_acs;
 	for (int bl = 0; bl < de_huffman.size(); bl++)
 		de_dc_acs.emplace_back(convert_dc_ac_to_rle(de_huffman[bl]));
@@ -128,6 +122,7 @@ imgGreyScale decompress_blocks(std::string compressed_blocks, int width, int hei
 
 	// Re-assemblage des block pour obtenir l'image dé-compréssée
 	auto img_compressed = deSplitImg(inv_dct_converted, width, height);
+
 	return img_compressed;
 }
 
