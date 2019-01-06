@@ -4,7 +4,6 @@
 
 #include "huffman.h"
 
-
 std::string encode_huffman(std::vector<pair_dc_ac> to_encode, huff_tbl dc_table, huff_tbl ac_table) {
 	auto dc = to_encode[0];
 	auto magn = std::get<0>(dc);
@@ -36,68 +35,6 @@ std::string encode_huffman(std::vector<pair_dc_ac> to_encode, huff_tbl dc_table,
 }
 
 std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_tbl rev_dc_tbl, rev_huff_tbl rev_ac_tbl) {
-	/*std::vector<pair_dc_ac> curr_block;
-
-	std::vector<std::vector<pair_dc_ac>> res;
-
-	int borne_inf = 0;
-	int i = 0;
-
-	bool dc = true;
-	while (borne_inf < code.length()) {
-		std::string sub = code.substr((unsigned long) borne_inf, (unsigned long) i);
-
-		if (dc) {
-			// DC
-			if (rev_dc_tbl.find(sub) != rev_dc_tbl.end()) {
-				borne_inf += i;
-				i = 0;
-				// trouvé
-				auto magn = rev_dc_tbl[sub];
-
-				if (magn == EOB) {
-					curr_block.emplace_back(pair_dc_ac(magn, ""));
-					dc = true;
-					res.emplace_back(curr_block);
-					curr_block.clear();
-					continue;
-				} else {
-					curr_block.emplace_back(
-							pair_dc_ac(magn, code.substr((unsigned long) borne_inf, (unsigned long) magn)));
-					borne_inf += magn;
-					dc = false;
-					continue;
-				}
-			}
-		} else {
-			// AC
-			if (rev_ac_tbl.find(sub) != rev_ac_tbl.end()) {
-				borne_inf += i;
-				i = 0;
-
-				auto zero_n_magn = rev_ac_tbl[sub];
-
-				if (zero_n_magn == EOB) {
-					curr_block.emplace_back(pair_dc_ac(zero_n_magn, ""));
-					dc = true;
-					res.emplace_back(curr_block);
-					curr_block.clear();
-					continue;
-				} else if (zero_n_magn == ZRL) {
-					curr_block.emplace_back(pair_dc_ac(zero_n_magn, ""));
-					continue;
-				} else {
-					curr_block.emplace_back(pair_dc_ac(zero_n_magn, code.substr((unsigned long) borne_inf,
-																				(unsigned long) zero_n_magn & 0x0F)));
-					borne_inf += zero_n_magn & 0x0F;
-					dc = false;
-					continue;
-				}
-			}
-		}
-		i++;
-	}*/
-
 	std::vector<pair_dc_ac> tmp;
 	int inf = 0;
 	int i = 1;
@@ -142,7 +79,6 @@ std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_t
 		i++;
 	}
 
-	std::cout <<"fin2"<<std::endl;
 	std::vector<std::vector<pair_dc_ac>> res;
 	std::vector<pair_dc_ac> tmp2;
 
@@ -157,6 +93,5 @@ std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_t
 			}
 		}
 	}
-	std::cout <<"fin"<<std::endl;
 	return res;
 }
