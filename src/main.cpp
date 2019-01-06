@@ -11,6 +11,7 @@
 #include "enc/rle.h"
 #include "bmp/write_bmp.h"
 #include "enc/huffman.h"
+#include "utils/split_str.h"
 #include <vector>
 #include <iomanip>
 
@@ -200,7 +201,7 @@ void test_zig_zag() {
 void final_test() {
 
 	// Lecture de l'image bmp non compressée
-	imgRGB img = readBMP("../res/hibiscus.bmp");
+	imgRGB img = readBMP("./res/hibiscus.bmp");
 
 	std::cout << "Img width : " << img.width << std::endl;
 	std::cout << "Img height : " << img.height << std::endl;
@@ -273,6 +274,15 @@ void final_test() {
 		compressed_huffman += encode_huffman(dc_ac_blocks[bl], DC1_LENGTH, AC_CODE);
 	std::cout << "(compressé / original) : " << compressed_huffman.length() / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
 	std::cout << a << std::endl;
+	/*std::vector<std::string> splitted = split_str(compressed_huffman.substr(1, compressed_huffman.length()-1), '#');
+
+	std::string minest(64 * 8, 'a');
+	for (auto s : splitted) {
+		if (s.length() < minest.length())
+			minest = s;
+	}
+	std::cout <<"a : " << minest << std::endl;*/
+	//exit(1);
 
 	/*long nb_bits = 0;
 	for (int i = 0; i < concatenated.size(); i++) {
@@ -298,6 +308,8 @@ void final_test() {
 
 	// Decodage de Huffman
 	std::vector<std::vector<pair_dc_ac>> de_huffman = decode_huffman(compressed_huffman, DC1_LENGTH_REV, AC_CODE_REV);
+
+	std::cout<<"inversed"<<std::endl;
 
 	// Conversion coeff : string binary repr vers int
 	std::vector<std::vector<pair_rle>> de_dc_acs;
