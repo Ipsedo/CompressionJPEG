@@ -78,11 +78,6 @@ std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle) {
 		pair_rle ac = rle[i];
 		auto zero_n_magn = std::get<0>(ac);
 
-		if (zero_n_magn == EOB) {
-			res.emplace_back(pair_dc_ac(EOB, ""));
-			break;
-		}
-
 		if (zero_n_magn == ZRL) {
 			res.emplace_back(pair_dc_ac(ZRL, ""));
 			continue;
