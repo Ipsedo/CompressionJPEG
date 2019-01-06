@@ -10,7 +10,7 @@ Usage :
 $ git clone https://github.com/Ipsedo/CompressionJPEG.git
 $ cd CompressionJPEG
 $ ./build.sh
-$ ./build/CompressionJPEG
+$ ./build/CompressionJPEG ./res/hibiscus.bmp
 ```
 
 ## Decription
