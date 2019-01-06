@@ -52,8 +52,14 @@ template<int Max_Magn>
 std::string write_bits(int magn, int to_code) {
 	std::string res;
 
-	// TODO ligne suivante marche pas
-	auto num = (unsigned long long) (to_code + pow(2, magn) - 1 - (to_code > 0 ? ((pow(2, magn-1) - 1) * 2) + 1 : 0));
+	unsigned long long num;
+
+	if (to_code < pow(2, magn - 1))
+		num = (unsigned long long) (to_code + pow(2, magn) - 1); // OK
+	else {
+		auto diff = -pow(2, magn - 1) + pow(2, magn);
+		num = (unsigned long long) (to_code - pow(2, magn-1) + diff);
+	}
 	std::bitset<Max_Magn> tmp(num);
 	res = tmp.to_string().substr((unsigned long) (Max_Magn - magn), (unsigned long) Max_Magn);
 
