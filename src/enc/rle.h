@@ -16,7 +16,7 @@
  * unsigned char, un octet dont :
  * 	- les 4 premier bits représentent le nombre de 0 (Codage RLE sur 0)
  * 	- les 4 dernier bits représentent la magnitude du prochain coefficient non-nul
- * int, le prochain coefficient non-nulle
+ * int, le prochain coefficient non-nul
  */
 typedef std::tuple<unsigned char, int> pair_rle;
 
@@ -40,31 +40,6 @@ std::vector<int> de_rle(std::vector<pair_rle> rle_values);
  * std::string : la représentation binaire du coefficient DC ou AC
  */
 typedef std::tuple<unsigned char, std::string> pair_dc_ac;
-
-/**
- * NE MARCHE PAS
- * @tparam Max_Magn La magintude maximum
- * @param magn La magintude effective du coefficient
- * @param to_code Le coefficient à coder
- * @return La chaine de caractère composée de 0 et 1 représentant la valeur binaire de to_code et de longueur magn
- */
-template<int Max_Magn>
-std::string write_bits(int magn, int to_code) {
-	std::string res;
-
-	unsigned long long num;
-
-	if (to_code < pow(2, magn - 1))
-		num = (unsigned long long) (to_code + pow(2, magn) - 1); // OK
-	else {
-		auto diff = -pow(2, magn - 1) + pow(2, magn);
-		num = (unsigned long long) (to_code - pow(2, magn-1) + diff);
-	}
-	std::bitset<Max_Magn> tmp(num);
-	res = tmp.to_string().substr((unsigned long) (Max_Magn - magn), (unsigned long) Max_Magn);
-
-	return res;
-}
 
 /**
  * Transform la sortie de RLE pour y associer la forme binaire des cofficients DC et AC
