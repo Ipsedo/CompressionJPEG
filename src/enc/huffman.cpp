@@ -35,11 +35,11 @@ std::string encode_huffman(std::vector<pair_dc_ac> to_encode, huff_tbl dc_table,
 }
 
 std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_tbl rev_dc_tbl, rev_huff_tbl rev_ac_tbl) {
-	std::vector<std::vector<pair_dc_ac>> res;
-	std::vector<pair_dc_ac> curr_block;
+	std::vector<pair_dc_ac> tmp;
 
-	int borne_inf = 0;
+	/*int borne_inf = 0;
 	int i = 0;
+	int curr = 0;
 
 	bool dc = true;
 	while (borne_inf < code.length()) {
@@ -51,7 +51,7 @@ std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_t
 				borne_inf += i;
 				i = 0;
 				// trouvé
-
+				curr = 1;
 				auto magn = rev_dc_tbl[sub];
 
 				if (magn == EOB) {
@@ -60,11 +60,13 @@ std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_t
 					res.emplace_back(curr_block);
 					curr_block.clear();
 					continue;
+				} else {
+					curr_block.emplace_back(
+							pair_dc_ac(magn, code.substr((unsigned long) borne_inf, (unsigned long) magn)));
+					borne_inf += magn;
+					dc = false;
+					continue;
 				}
-
-				curr_block.emplace_back(pair_dc_ac(magn, code.substr((unsigned long) borne_inf, (unsigned long) magn)));
-				borne_inf += magn;
-				dc = false;
 			}
 		} else {
 			// AC
@@ -74,25 +76,87 @@ std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_t
 
 				auto zero_n_magn = rev_ac_tbl[sub];
 
-				if (zero_n_magn == EOB) {
+				if (zero_n_magn == EOB || curr > 64) {
 					curr_block.emplace_back(pair_dc_ac(zero_n_magn, ""));
 					dc = true;
 					res.emplace_back(curr_block);
 					curr_block.clear();
 					continue;
-				}
-
-				if (zero_n_magn == ZRL) {
+				} else if (zero_n_magn == ZRL) {
 					std::cout << "ZRL" << std::endl;
 					curr_block.emplace_back(pair_dc_ac(zero_n_magn, ""));
+					curr += 16;
+					continue;
+				} else {
+					curr_block.emplace_back(pair_dc_ac(zero_n_magn, code.substr((unsigned long) borne_inf,
+																				(unsigned long) zero_n_magn & 0x0F)));
+					borne_inf += zero_n_magn & 0x0F;
+					curr += (zero_n_magn & 0xF0) + 1;
+					dc = false;
 					continue;
 				}
-
-				curr_block.emplace_back(pair_dc_ac(zero_n_magn, code.substr((unsigned long) borne_inf, (unsigned long) zero_n_magn & 0x0F)));
-				borne_inf += zero_n_magn & 0x0F;
 			}
 		}
 		i++;
+	}*/
+
+	int inf = 0;
+	int i = 0;
+
+	bool dc = true;
+
+	while (inf < code.length()) {
+		std::string sub = code.substr((unsigned long) inf, (unsigned long) i);
+
+		if (dc && rev_dc_tbl.find(sub) != rev_dc_tbl.end()) {
+			inf += i;
+			i = 0;
+
+			auto magn = rev_dc_tbl[sub];
+
+			tmp.emplace_back(pair_dc_ac(magn, code.substr((unsigned long) inf, magn)));
+			inf += magn;
+
+			dc = false;
+			if (magn == EOB)
+				dc = true;
+		} else if (!dc && rev_ac_tbl.find(sub) != rev_ac_tbl.end()) {
+			inf += i;
+			i = 0;
+
+			auto zero_n_magn = rev_ac_tbl[sub];
+			auto magn = zero_n_magn & 0x0F;
+
+			if (zero_n_magn == EOB) {
+				tmp.emplace_back(pair_dc_ac(EOB, ""));
+				dc = true;
+				continue;
+			} else if (zero_n_magn == ZRL) {
+				tmp.emplace_back(pair_dc_ac(ZRL, ""));
+				continue;
+			}
+
+			tmp.emplace_back(pair_dc_ac(zero_n_magn, code.substr((unsigned long) inf, (unsigned long) magn)));
+			inf += magn;
+		}
+
+		i++;
 	}
+
+	std::vector<std::vector<pair_dc_ac>> res;
+	std::vector<pair_dc_ac> tmp2;
+
+	for (int i = 0; i < tmp.size(); i++) {
+		for (int j = i; j < tmp.size(); j++) {
+			tmp2.emplace_back(tmp[j]);
+			if (std::get<0>(tmp[j]) == EOB) {
+				i = j;
+				res.emplace_back(tmp2);
+				tmp2.clear();
+				break;
+			}
+		}
+	}
+
 	return res;
 }

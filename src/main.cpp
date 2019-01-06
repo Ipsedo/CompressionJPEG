@@ -268,9 +268,11 @@ void final_test() {
 	// On concatene tout les pair_rle pour mesurer
 	// l'espace mémoire occupé par uniquement les pixels
 	std::string compressed_huffman;
-	for (int bl = 0; bl < rle_blocks.size(); bl++)
+	int a = 0;
+	for (int bl = 0; bl < rle_blocks.size(); bl++, a++)
 		compressed_huffman += encode_huffman(dc_ac_blocks[bl], DC1_LENGTH, AC_CODE);
 	std::cout << "(compressé / original) : " << compressed_huffman.length() / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
+	std::cout << a << std::endl;
 
 	/*long nb_bits = 0;
 	for (int i = 0; i < concatenated.size(); i++) {
