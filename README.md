@@ -12,3 +12,27 @@ $ cd CompressionJPEG
 $ ./build.sh
 $ ./build/CompressionJPEG
 ```
+
+## Decription
+Structure du projet :
+
+```
+root
+ |-- res/           : images de test
+ |-- build.sh       : script de compilation
+ |-- CMakeLists.txt : fichier CMake
+ |-- src/
+      |-- bmp/     : écriture / lecture bmp
+      |-- dct/     : DCT (forward et inverse)
+      |-- enc/     : Encodage de l'image
+      |              (Zig-Zag, RLE, Huffman)
+      |-- img/     : Définitions structure image
+      |              (+ split image)
+      |-- jpeg/    : Pipeline de compression /
+      |              décompression JPEG
+      |-- quant/   : Quantification
+      |-- tests/   : Différent tests
+      |-- utils/   : Optional / pas nécéssaire
+      |-- main.cpp : Fonction principale         
+
+```
