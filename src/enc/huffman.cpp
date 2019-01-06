@@ -34,7 +34,8 @@ std::string encode_huffman(std::vector<pair_dc_ac> to_encode, huff_tbl dc_table,
 	return res;
 }
 
-std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_tbl rev_dc_tbl, rev_huff_tbl rev_ac_tbl) {
+std::vector<std::vector<pair_dc_ac>>
+decode_huffman(std::string code, rev_huff_tbl rev_dc_tbl, rev_huff_tbl rev_ac_tbl) {
 	std::vector<pair_dc_ac> tmp;
 	int inf = 0;
 	int i = 1;

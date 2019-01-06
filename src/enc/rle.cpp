@@ -39,7 +39,7 @@ std::vector<pair_rle> rle(std::vector<int> quantized_zig_zag_block) {
 			// (on incremente i dans le même temps
 			// et on décrémente le nombre de 0 restant)
 			if (zero_restant >= 16) {
-				res.emplace_back(pair_rle(ZRL,0));
+				res.emplace_back(pair_rle(ZRL, 0));
 				zero_restant -= 16;
 				i += 16;
 			}

@@ -66,7 +66,7 @@ std::string make_compressed_blocks(imgGreyScale imgGS, jpeg_tools tools) {
 	std::string compressed_huffman;
 	int cpt = 0;
 	std::string max(64, 'a');
-	for (int bl = 0; bl < rle_blocks.size(); bl++,cpt++) {
+	for (int bl = 0; bl < rle_blocks.size(); bl++, cpt++) {
 		auto tmp = encode_huffman(dc_ac_blocks[bl], tools.DC_code, tools.AC_code);
 		max = max.length() > tmp.length() ? tmp : max;
 		compressed_huffman += tmp;
@@ -80,7 +80,8 @@ imgGreyScale decompress_blocks(std::string compressed_blocks, int width, int hei
 	rev_huff_tbl AC_CODE_REV = reverse_huffman_table(tools.AC_code);
 
 	// Decodage de Huffman
-	std::vector<std::vector<pair_dc_ac>> de_huffman = decode_huffman(move(compressed_blocks), DC1_LENGTH_REV, AC_CODE_REV);
+	std::vector<std::vector<pair_dc_ac>> de_huffman = decode_huffman(move(compressed_blocks), DC1_LENGTH_REV,
+																	 AC_CODE_REV);
 
 	// Conversion coeff : string binary repr vers int
 	std::vector<std::vector<pair_rle>> de_dc_acs;

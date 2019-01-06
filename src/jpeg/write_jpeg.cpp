@@ -13,5 +13,5 @@ void write_jpeg(std::string output_file_name) {
 	file.write((char *) header, 2);
 
 	unsigned char quant_table[4]{0xFF, DQT,
-							     0x80, 0x00}; // une seule table + Big Endian
+								 0x80, 0x00}; // une seule table + Big Endian
 }

@@ -93,7 +93,7 @@ imgGreyScale deSplitImg(std::vector<std::vector<std::vector<int>>> to_de_split, 
 	res.width = width;
 	res.height = height;
 
-	res.pixels = std::vector<std::vector<int>> ((unsigned long) res.height, std::vector<int>(res.width, 0));
+	res.pixels = std::vector<std::vector<int>>((unsigned long) res.height, std::vector<int>(res.width, 0));
 
 	// Deux premières boucles pour le parcourt des blocks
 	for (int y = 0; y < height; y += 8) {

@@ -57,13 +57,8 @@ std::vector<int> zig_zag_encodage(std::vector<std::vector<int>> to_encode) {
 			 *    / |
 			 * 	/___|
 			 */
-			if (step) {
-				x--;
-				y += 2;
-			} else {
-				y--;
-				x += 2;
-			}
+			if (step) { x--; y += 2; }
+			else { y--; x += 2; }
 		}
 
 		step = !step;
@@ -101,19 +96,11 @@ std::vector<std::vector<int>> zig_zag_decodage(std::vector<int> to_decode) {
 		curr_diag++;
 
 		if (curr_diag < N) {
-
 			if (step) y++;
 			else x++;
-
 		} else {
-
-			if (step) {
-				x--;
-				y += 2;
-			} else {
-				y--;
-				x += 2;
-			}
+			if (step) { x--; y += 2; }
+			else { y--; x += 2; }
 		}
 
 		step = !step;

@@ -45,14 +45,14 @@ void test_all() {
 	int N = 8;
 
 	// from wikipedia https://fr.wikipedia.org/wiki/JPEG
-	std::vector<std::vector<double>> r = { {139,144,149,153,155,155,155,155},
-										   {144,151,153,156,159,156,156,156},
-										   {150,155,160,163,158,156,156,156},
-										   {159,161,162,160,160,159,159,159},
-										   {159,160,161,162,162,155,155,155},
-										   {161,161,161,161,160,157,157,157},
-										   {162,162,161,163,162,157,157,157},
-										   {162,162,161,161,163,158,158,158} };
+	std::vector<std::vector<double>> r = {{139, 144, 149, 153, 155, 155, 155, 155},
+										  {144, 151, 153, 156, 159, 156, 156, 156},
+										  {150, 155, 160, 163, 158, 156, 156, 156},
+										  {159, 161, 162, 160, 160, 159, 159, 159},
+										  {159, 160, 161, 162, 162, 155, 155, 155},
+										  {161, 161, 161, 161, 160, 157, 157, 157},
+										  {162, 162, 161, 163, 162, 157, 157, 157},
+										  {162, 162, 161, 161, 163, 158, 158, 158}};
 
 	std::cout << "Original : " << std::endl;
 	std::vector<std::vector<double>> dct;
@@ -123,14 +123,18 @@ void test_all() {
 	std::cout << "RLE" << std::endl;
 
 	for (int i = 0; i < rle_res.size(); i++)
-		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(rle_res[i])) << std::dec << ", " << std::get<1>(rle_res[i]) <<"] ";
+		std::cout << "[0x" << std::setfill('0') << std::setw(2) << std::hex
+				  << static_cast<unsigned int>(std::get<0>(rle_res[i])) << std::dec << ", " << std::get<1>(rle_res[i])
+				  << "] ";
 	std::cout << std::endl << std::endl;
 
 	std::vector<pair_dc_ac> pre_coded_dc_ac = write_dc_acs(rle_res);
 
 	std::cout << "Pre coded DC and AC" << std::endl;
 	for (int i = 0; i < pre_coded_dc_ac.size(); i++)
-		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(pre_coded_dc_ac[i])) << std::dec << ", " << std::get<1>(pre_coded_dc_ac[i]) <<"] ";
+		std::cout << "[0x" << std::setfill('0') << std::setw(2) << std::hex
+				  << static_cast<unsigned int>(std::get<0>(pre_coded_dc_ac[i])) << std::dec << ", "
+				  << std::get<1>(pre_coded_dc_ac[i]) << "] ";
 	std::cout << std::endl << std::endl;
 
 	std::cout << "Binary string repre" << std::endl;
@@ -143,13 +147,17 @@ void test_all() {
 	std::cout << "Decoded huffman" << std::endl;
 	auto decoded_huffman = decode_huffman(huff, DC1_LENGTH_REV, AC_CODE_REV);
 	for (int i = 0; i < decoded_huffman[0].size(); i++)
-		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(decoded_huffman[0][i])) << std::dec << ", " << std::get<1>(decoded_huffman[0][i]) <<"] ";
+		std::cout << "[0x" << std::setfill('0') << std::setw(2) << std::hex
+				  << static_cast<unsigned int>(std::get<0>(decoded_huffman[0][i])) << std::dec << ", "
+				  << std::get<1>(decoded_huffman[0][i]) << "] ";
 	std::cout << std::endl << std::endl;
 
 	std::cout << "De DC AC" << std::endl;
 	auto de_dc_acs = convert_dc_ac_to_rle(decoded_huffman[0]);
 	for (int i = 0; i < de_dc_acs.size(); i++)
-		std::cout << "[0x" << std::setfill('0') << std::setw(2)<< std::hex << static_cast<unsigned int>(std::get<0>(de_dc_acs[i])) << std::dec << ", " << std::get<1>(de_dc_acs[i]) <<"] ";
+		std::cout << "[0x" << std::setfill('0') << std::setw(2) << std::hex
+				  << static_cast<unsigned int>(std::get<0>(de_dc_acs[i])) << std::dec << ", "
+				  << std::get<1>(de_dc_acs[i]) << "] ";
 	std::cout << std::endl << std::endl;
 
 	std::cout << "de RLE" << std::endl;

@@ -32,7 +32,8 @@ void final_test() {
 	jpeg_tools tools = {Q1, DC1_LENGTH, AC_CODE};
 	std::string huffman_blocks = make_compressed_blocks(imgGS, tools);
 
-	std::cout<< "(compressé / original) : " << huffman_blocks.length() / 8 << " / " << imgGS.width * imgGS.height << " octets" << std::endl;
+	std::cout << "(compressé / original) : " << huffman_blocks.length() / 8 << " / " << imgGS.width * imgGS.height
+			  << " octets" << std::endl;
 
 	auto img_compressed = decompress_blocks(huffman_blocks, imgGS.width, imgGS.height, tools);
 

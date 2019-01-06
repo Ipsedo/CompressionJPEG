@@ -26,7 +26,7 @@ std::string write_bits(int magn, int to_code) {
 		num = (unsigned long long) (to_code + pow(2, magn) - 1); // OK
 	else {
 		auto diff = -pow(2, magn - 1) + pow(2, magn);
-		num = (unsigned long long) (to_code - pow(2, magn-1) + diff);
+		num = (unsigned long long) (to_code - pow(2, magn - 1) + diff);
 	}
 	std::bitset<Max_Magn> tmp(num);
 	res = tmp.to_string().substr((unsigned long) (Max_Magn - magn), (unsigned long) Max_Magn);

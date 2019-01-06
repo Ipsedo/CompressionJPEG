@@ -21,7 +21,7 @@ double fdct(std::vector<std::vector<double>> pixelBlock, int i, int j, int N) {
 std::vector<std::vector<double>> fdct_block(std::vector<std::vector<double>> pixelBlock) {
 	auto N = pixelBlock.size();
 	std::vector<std::vector<double>> res(N, std::vector<double>(N, 0));
-	for (int i = 0; i < N; i ++)
+	for (int i = 0; i < N; i++)
 		for (int j = 0; j < N; j++)
 			res[i][j] = fdct(pixelBlock, i, j, N);
 
