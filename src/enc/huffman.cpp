@@ -147,9 +147,9 @@ std::vector<std::vector<pair_dc_ac>> decode_huffman(std::string code, rev_huff_t
 	std::vector<pair_dc_ac> tmp2;
 
 	for (int i = 0; i < tmp.size(); i++) {
-		for (int j = i; j < tmp.size(); j++) {
+		for (int j = i, limit = 0; j < tmp.size(); j++, limit++) {
 			tmp2.emplace_back(tmp[j]);
-			if (std::get<0>(tmp[j]) == EOB) {
+			if (std::get<0>(tmp[j]) == EOB || limit > 64) {
 				i = j;
 				res.emplace_back(tmp2);
 				tmp2.clear();
