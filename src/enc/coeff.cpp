@@ -11,7 +11,7 @@ int decode_bits(std::string coded_coeff, int magn) {
 	int coeff;
 
 	if (i > limit) {
-		coeff = int(i - pow(2.0, magn) - 1 + (pow(2, magn - 1) * 2 + 1));
+		coeff = int(i - pow(2.0, magn) + pow(2, magn - 1) * 2);
 	} else {
 		coeff = int(i - pow(2.0, magn) + 1);
 	}
