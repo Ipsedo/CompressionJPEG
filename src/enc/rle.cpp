@@ -4,6 +4,7 @@
 
 #include "rle.h"
 #include "../jpeg/markers.h"
+#include "coeff.h"
 #include <stdlib.h>
 #include <cmath>
 #include <iostream>
@@ -83,6 +84,11 @@ std::vector<pair_dc_ac> write_dc_acs(std::vector<pair_rle> rle) {
 			continue;
 		}
 
+		if (zero_n_magn == EOB) {
+			res.emplace_back(pair_dc_ac(EOB, ""));
+			break;
+		}
+
 		int coeff = std::get<1>(ac);
 
 		int magn = zero_n_magn & 0x0F;
@@ -132,18 +138,17 @@ std::vector<pair_rle> convert_dc_ac_to_rle(std::vector<pair_dc_ac> dc_acs) {
 		auto byte = std::get<0>(p);
 		auto str = std::get<1>(p);
 
-		int i = (int) strtol(str.c_str(), NULL, 2);
-
-		int limit = int(-(pow(2.0, byte & 0x0F) - 1) + pow(2.0, byte & 0x0F - 1) + 1);
-
-		int coeff = 0;
-
-		if (i > limit) {
-			coeff = int(i - pow(2.0, byte & 0x0F) - 1 + (pow(2, byte & 0x0F - 1) * 2 + 1));
-		} else {
-			coeff = int(i - pow(2.0, byte & 0x0F) + 1);
+		if (byte == ZRL) {
+			res.emplace_back(pair_rle(ZRL, 0));
+			continue;
 		}
-		res.emplace_back(pair_rle(byte, coeff));
+
+		if (byte == EOB) {
+			res.emplace_back(pair_rle(EOB, 0));
+			break;
+		}
+
+		res.emplace_back(pair_rle(byte, decode_bits(str, byte & 0x0F)));
 	}
 	return res;
 }
